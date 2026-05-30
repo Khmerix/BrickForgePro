@@ -3201,37 +3201,38 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         mesh.rotation.y = rotation;
         mesh.traverse(child => { if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; } });
 
-        // Placement flash
+        // Textures — apply before AO so clones inherit the map
+        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete',canopy:'metal',fuel_pump:'metal',sign:'metal',flagpole:'metal',bollard:'metal',hvac:'metal',bench:'wood',bleacher:'metal',round_wall:'stone',turret:'stone',dome:'stone',bay_window:'stone',rotunda:'stone',arch_wall:'stone',road:'concrete',road_cross:'concrete',pavement:'concrete',crosswalk:'concrete' };
+        if (BLOCK_TEX_MAP[blockType]) {
+            const tex = getCachedTexture(BLOCK_TEX_MAP[blockType]);
+            mesh.traverse(child => { if (child.isMesh && child.material && !Array.isArray(child.material)) { child.material.map = tex; child.material.needsUpdate = true; } });
+        }
+
+        // Subtle face-contrast AO (only on plain single-mesh cube blocks, not groups)
+        // Must run BEFORE placement flash so the flash captures the final material array.
+        if (!mesh.isGroup && mesh.isMesh && mesh.geometry && mesh.geometry.type === 'BoxGeometry' && mesh.material && !Array.isArray(mesh.material)) {
+            applyFaceAO(mesh, blockType);
+        }
+
+        // Placement flash — handles both single materials and arrays
         const flashedMaterials = new Set();
         mesh.traverse(child => {
-            if (child.isMesh && child.material && !flashedMaterials.has(child.material)) {
-                flashedMaterials.add(child.material);
-                const mat = child.material;
-                if (mat.emissive) {
-                    const oldEmissive = mat.emissive.clone();
-                    const oldEI = mat.emissiveIntensity || 0;
-                    mat.emissive.setHex(0xffffff); mat.emissiveIntensity = 0.8;
-                    setTimeout(() => { if (mat) { mat.emissive.copy(oldEmissive); mat.emissiveIntensity = oldEI; } }, 200);
-                }
-            }
+            if (!child.isMesh) return;
+            const mats = Array.isArray(child.material) ? child.material : (child.material ? [child.material] : []);
+            mats.forEach(mat => {
+                if (!mat || flashedMaterials.has(mat) || !mat.emissive) return;
+                flashedMaterials.add(mat);
+                const oldEmissive = mat.emissive.clone();
+                const oldEI = mat.emissiveIntensity || 0;
+                mat.emissive.setHex(0xffffff); mat.emissiveIntensity = 0.8;
+                setTimeout(() => { mat.emissive.copy(oldEmissive); mat.emissiveIntensity = oldEI; }, 200);
+            });
         });
 
         mesh.userData = {
             ownerId: mpState.userId, ownerName: mpState.userName,
             blockType, color, size, timestamp: Date.now()
         };
-
-        // Textures
-        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete',canopy:'metal',fuel_pump:'metal',sign:'metal',flagpole:'metal',bollard:'metal',hvac:'metal',bench:'wood',bleacher:'metal',round_wall:'stone',turret:'stone',dome:'stone',bay_window:'stone',rotunda:'stone',arch_wall:'stone',road:'concrete',road_cross:'concrete',pavement:'concrete',crosswalk:'concrete' };
-        if (BLOCK_TEX_MAP[blockType]) {
-            const tex = getCachedTexture(BLOCK_TEX_MAP[blockType]);
-            mesh.traverse(child => { if (child.isMesh && child.material) { child.material.map = tex; child.material.needsUpdate = true; } });
-        }
-
-        // Subtle face-contrast AO (only on plain single-mesh cube blocks, not groups)
-        if (!mesh.isGroup && mesh.isMesh && mesh.geometry && mesh.geometry.type === 'BoxGeometry' && mesh.material && !Array.isArray(mesh.material)) {
-            applyFaceAO(mesh, blockType);
-        }
 
         // Anim types
         const ANIM_TYPES = { water:'water',lava:'lava',glass:'glass',ice:'glass',neon:'neon',glow:'glow' };

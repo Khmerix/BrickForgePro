@@ -275,8 +275,8 @@
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
             border-top: 1px solid rgba(0,212,255,0.15);
         }
-        .toolbar-retracted { transform: translateY(calc(100% - 22px)); opacity: 0.15; filter: blur(2px); }
-        .toolbar-retracted:hover { opacity: 0.95; filter: blur(0); }
+        .toolbar-retracted { transform: translateY(calc(100% - 28px)); opacity: 0.45; filter: blur(1px); }
+        .toolbar-retracted:hover { opacity: 0.98; filter: blur(0); transform: translateY(calc(100% - 28px)); }
 
         /* FAVORITES BAR */
         #favorites-bar {
@@ -644,7 +644,6 @@
         .ui-interactive { pointer-events: auto; }
         .field-label { font-size: 9px; font-family: 'Orbitron', monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 6px; display: block; opacity: 0.85; }
     </style>
-    <base target="_blank">
 </head>
 <body>
 
@@ -799,7 +798,7 @@
             <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
             <!-- Undo + Clear -->
             <button onclick="undo()" class="glass-btn icon-btn" title="Undo (Ctrl+Z)" style="border-radius:50%;"><i class="fas fa-undo" style="font-size:13px;"></i></button>
-            <button onclick="clearAll()" class="glass-btn icon-btn" title="Clear All" style="border-radius:50%; border-color:rgba(239,68,68,0.35);"><i class="fas fa-trash" style="color:#ef4444; font-size:13px;"></i></button>
+            <button onclick="if(confirm('Clear all blocks? This cannot be undone.')) clearAll()" class="glass-btn icon-btn" title="Clear All" style="border-radius:50%; border-color:rgba(239,68,68,0.35);"><i class="fas fa-trash" style="color:#ef4444; font-size:13px;"></i></button>
             <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
             <!-- Snap Toggle -->
             <div class="flex items-center gap-2" title="Toggle Grid Snapping" style="flex-shrink:0;">
@@ -980,6 +979,19 @@
                             <div class="block-btn" onclick="pickBlock('skyscraper_twisted', this)" oncontextmenu="addToFavorites('skyscraper_twisted',event)"><div class="icon" style="color:#00CED1"><i class="fas fa-dna"></i></div><div class="label">Twisted</div></div>
                         </div>
                     </div>
+                    <div class="ml-4">
+                        <div class="category-header">Urban &amp; Street</div>
+                        <div class="flex flex-wrap">
+                            <div class="block-btn" onclick="pickBlock('canopy', this)" oncontextmenu="addToFavorites('canopy',event)"><div class="icon" style="color:#4fc3f7"><i class="fas fa-warehouse"></i></div><div class="label">Canopy</div></div>
+                            <div class="block-btn" onclick="pickBlock('fuel_pump', this)" oncontextmenu="addToFavorites('fuel_pump',event)"><div class="icon" style="color:#ff8f00"><i class="fas fa-gas-pump"></i></div><div class="label">Fuel Pump</div></div>
+                            <div class="block-btn" onclick="pickBlock('sign', this)" oncontextmenu="addToFavorites('sign',event)"><div class="icon" style="color:#fdd835"><i class="fas fa-sign"></i></div><div class="label">Sign</div></div>
+                            <div class="block-btn" onclick="pickBlock('flagpole', this)" oncontextmenu="addToFavorites('flagpole',event)"><div class="icon" style="color:#ef5350"><i class="fas fa-flag"></i></div><div class="label">Flagpole</div></div>
+                            <div class="block-btn" onclick="pickBlock('bollard', this)" oncontextmenu="addToFavorites('bollard',event)"><div class="icon" style="color:#ffca28"><i class="fas fa-circle-notch"></i></div><div class="label">Bollard</div></div>
+                            <div class="block-btn" onclick="pickBlock('bench', this)" oncontextmenu="addToFavorites('bench',event)"><div class="icon" style="color:#a1887f"><i class="fas fa-chair"></i></div><div class="label">Bench</div></div>
+                            <div class="block-btn" onclick="pickBlock('hvac', this)" oncontextmenu="addToFavorites('hvac',event)"><div class="icon" style="color:#90a4ae"><i class="fas fa-wind"></i></div><div class="label">HVAC Unit</div></div>
+                            <div class="block-btn" onclick="pickBlock('bleacher', this)" oncontextmenu="addToFavorites('bleacher',event)"><div class="icon" style="color:#7986cb"><i class="fas fa-align-justify"></i></div><div class="label">Bleacher</div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1086,14 +1098,15 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <div class="category-header">Ground Material</div>
+                        <div class="category-header">Ground Surface</div>
                         <div class="flex flex-wrap">
-                            <div class="block-btn" onclick="setGround('tan')"><div class="icon" style="color:#C2A87D"><i class="fas fa-square"></i></div><div class="label">Tan</div></div>
-                            <div class="block-btn" onclick="setGround('grass')"><div class="icon" style="color:#4a7c59"><i class="fas fa-square"></i></div><div class="label">Grass</div></div>
-                            <div class="block-btn" onclick="setGround('dirt')"><div class="icon" style="color:#8B4513"><i class="fas fa-square"></i></div><div class="label">Dirt</div></div>
-                            <div class="block-btn" onclick="setGround('sand')"><div class="icon" style="color:#F4A460"><i class="fas fa-square"></i></div><div class="label">Sand</div></div>
-                            <div class="block-btn" onclick="setGround('snow')"><div class="icon" style="color:#fff"><i class="fas fa-square"></i></div><div class="label">Snow</div></div>
-                            <div class="block-btn" onclick="setGround('stone')"><div class="icon" style="color:#666"><i class="fas fa-square"></i></div><div class="label">Stone</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="tan" onclick="setGround('tan')"><div class="icon" style="color:#C2A87D"><i class="fas fa-grip-horizontal"></i></div><div class="label">Tan</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="grass" onclick="setGround('grass')"><div class="icon" style="color:#4a9c52"><i class="fas fa-seedling"></i></div><div class="label">Grass</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="dirt" onclick="setGround('dirt')"><div class="icon" style="color:#9B5523"><i class="fas fa-circle"></i></div><div class="label">Dirt</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="sand" onclick="setGround('sand')"><div class="icon" style="color:#D4A84B"><i class="fas fa-water"></i></div><div class="label">Sand</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="snow" onclick="setGround('snow')"><div class="icon" style="color:#c8deff"><i class="fas fa-snowflake"></i></div><div class="label">Snow</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="stone" onclick="setGround('stone')"><div class="icon" style="color:#888"><i class="fas fa-th-large"></i></div><div class="label">Stone</div></div>
+                            <div class="block-btn ground-mat-btn" data-mat="rock" onclick="setGround('rock')"><div class="icon" style="color:#7a7060"><i class="fas fa-mountain"></i></div><div class="label">Rock</div></div>
                         </div>
                     </div>
                 </div>
@@ -1158,7 +1171,7 @@
         <h3 style="color:var(--accent); margin:0 0 20px 0; font-size:16px; font-family:'Orbitron',monospace; font-weight:700; display:flex; align-items:center; gap:10px;">
             <i class="fas fa-palette"></i> Choose Theme
         </h3>
-        <div id="theme-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;"></div>
+        <div id="theme-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:12px; margin-bottom:20px;"></div>
         <div style="text-align:right;">
             <button onclick="closeThemePicker()" class="glass-btn" style="border-color:rgba(239,68,68,0.35);"><i class="fas fa-times"></i> Close</button>
         </div>
@@ -1171,7 +1184,7 @@
         <h3 style="color:var(--accent); margin:0 0 20px 0; font-size:16px; font-family:'Orbitron',monospace; font-weight:700; display:flex; align-items:center; gap:10px;">
             <i class="fas fa-layer-group"></i> Starter Templates
         </h3>
-        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px;" id="template-grid"></div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:14px; margin-bottom:20px;" id="template-grid"></div>
         <div style="text-align:right;">
             <button onclick="closeTemplatesModal()" class="glass-btn" style="border-color:rgba(239,68,68,0.35);"><i class="fas fa-times"></i> Close</button>
         </div>
@@ -1199,10 +1212,12 @@ const safeStorage = {
         p.style.cssText = `width:${size}px; height:${size}px; left:${Math.random()*100}%; animation-duration:${3+Math.random()*5}s; animation-delay:${Math.random()*3}s; background:${Math.random()>0.5?'#00d4ff':'#7c44ff'}; opacity:0;`;
         container.appendChild(p);
     }
-    setTimeout(() => {
+    const hideSplash = () => {
         const splash = document.getElementById('splash-screen');
         if (splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; }, 850); }
-    }, 2000);
+    };
+    if (document.readyState === 'complete') { setTimeout(hideSplash, 400); }
+    else { window.addEventListener('load', () => setTimeout(hideSplash, 400)); setTimeout(hideSplash, 3500); }
 })();
 
 // ==================== ROLE CARD SELECTOR ====================
@@ -1361,6 +1376,59 @@ function updateSkyForScene(sceneName) {
 }
 
 // ==================== TAN GROUND TEXTURE ====================
+function createMaterialTexture(matType) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (matType === 'grass') {
+        ctx.fillStyle = '#3d6b3a'; ctx.fillRect(0,0,512,512);
+        // Darker patches
+        for (let i=0;i<180;i++){const x=Math.random()*512,y=Math.random()*512,r=4+Math.random()*18;ctx.fillStyle=`hsl(${115+Math.random()*20},${35+Math.random()*20}%,${22+Math.random()*18}%)`;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+        // Lighter highlights
+        for (let i=0;i<120;i++){const x=Math.random()*512,y=Math.random()*512,r=2+Math.random()*8;ctx.fillStyle=`hsl(${118+Math.random()*15},${45+Math.random()*20}%,${42+Math.random()*18}%)`;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+        // Blade tufts
+        for (let i=0;i<300;i++){const x=Math.random()*512,y=Math.random()*512,h=3+Math.random()*10,w=0.8+Math.random()*1.5;ctx.fillStyle=`hsl(${112+Math.random()*18},50%,${28+Math.random()*20}%)`;ctx.save();ctx.translate(x,y);ctx.rotate((Math.random()-0.5)*0.6);ctx.fillRect(-w/2,0,w,-h);ctx.restore();}
+        // Subtle grid hint
+        ctx.strokeStyle='rgba(20,60,20,0.12)';ctx.lineWidth=0.8;for(let i=0;i<=512;i+=64){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,512);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(512,i);ctx.stroke();}
+    } else if (matType === 'dirt') {
+        ctx.fillStyle = '#6b3f1e'; ctx.fillRect(0,0,512,512);
+        // Soil clumps
+        for (let i=0;i<220;i++){const x=Math.random()*512,y=Math.random()*512,r=3+Math.random()*14;ctx.fillStyle=`hsl(${22+Math.random()*14},${55+Math.random()*20}%,${18+Math.random()*18}%)`;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+        // Small pebbles
+        for (let i=0;i<60;i++){const x=Math.random()*512,y=Math.random()*512,r=1.5+Math.random()*4;ctx.fillStyle=`hsl(${30+Math.random()*30},${20+Math.random()*20}%,${35+Math.random()*20}%)`;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+        // Cracks
+        for (let i=0;i<18;i++){ctx.strokeStyle=`rgba(30,12,4,0.3)`;ctx.lineWidth=0.8+Math.random()*1.2;ctx.beginPath();const sx=Math.random()*512,sy=Math.random()*512;ctx.moveTo(sx,sy);for(let s=0;s<4;s++)ctx.lineTo(sx+(Math.random()-0.5)*60,sy+(Math.random()-0.5)*60);ctx.stroke();}
+    } else if (matType === 'stone' || matType === 'rock') {
+        ctx.fillStyle = '#5a5a5a'; ctx.fillRect(0,0,512,512);
+        // Irregular rock faces
+        for (let i=0;i<55;i++){const x=Math.random()*512,y=Math.random()*512,rx=10+Math.random()*38,ry=8+Math.random()*26,rot=Math.random()*Math.PI,sh=42+Math.random()*28;ctx.fillStyle=`hsl(${200+Math.random()*20},${4+Math.random()*6}%,${sh}%)`;ctx.beginPath();ctx.ellipse(x,y,rx,ry,rot,0,Math.PI*2);ctx.fill();}
+        // Rock edges (lighter top, darker bottom)
+        for (let i=0;i<40;i++){const x=Math.random()*512,y=Math.random()*512,rx=8+Math.random()*30,ry=6+Math.random()*20,rot=Math.random()*Math.PI;ctx.strokeStyle=`rgba(200,200,200,0.12)`;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(x-1,y-1,rx,ry,rot,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=`rgba(0,0,0,0.18)`;ctx.beginPath();ctx.ellipse(x+1,y+1,rx,ry,rot,0,Math.PI*2);ctx.stroke();}
+        // Mortar lines
+        ctx.strokeStyle='rgba(35,35,35,0.3)';ctx.lineWidth=1.5;for(let r=0;r<512;r+=48){const off=(Math.floor(r/48)%2)*24;for(let c=-24;c<512;c+=64){ctx.beginPath();ctx.moveTo(c+off,r);ctx.lineTo(c+off+56,r);ctx.stroke();}ctx.beginPath();ctx.moveTo(0,r);ctx.lineTo(512,r);ctx.stroke();}
+    } else if (matType === 'sand') {
+        ctx.fillStyle = '#d4a85c'; ctx.fillRect(0,0,512,512);
+        // Ripple waves
+        for (let row=0;row<24;row++){const y=row*22,amp=3+Math.random()*4;ctx.strokeStyle=`rgba(${180+Math.floor(Math.random()*20)},${130+Math.floor(Math.random()*20)},60,0.35)`;ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(0,y);for(let x=0;x<512;x+=4)ctx.lineTo(x,y+Math.sin(x*0.06+row)*amp);ctx.stroke();}
+        // Fine speckles
+        for (let i=0;i<600;i++){const x=Math.random()*512,y=Math.random()*512;ctx.fillStyle=`rgba(${160+Math.random()*60},${100+Math.random()*40},30,${0.1+Math.random()*0.2})`;ctx.fillRect(x,y,1,1);}
+    } else if (matType === 'snow') {
+        ctx.fillStyle = '#e8eeff'; ctx.fillRect(0,0,512,512);
+        // Soft drifts
+        for (let i=0;i<60;i++){const x=Math.random()*512,y=Math.random()*512;ctx.fillStyle='rgba(170,190,235,0.18)';ctx.beginPath();ctx.ellipse(x,y,25+Math.random()*50,10+Math.random()*20,Math.random()*Math.PI,0,Math.PI*2);ctx.fill();}
+        // Sparkles
+        for (let i=0;i<400;i++){const x=Math.random()*512,y=Math.random()*512,a=0.3+Math.random()*0.7;ctx.fillStyle=`rgba(255,255,255,${a})`;ctx.fillRect(x,y,1+Math.random()*2,1+Math.random()*2);}
+        // Footprint shadows
+        for (let i=0;i<8;i++){const cx=Math.random()*512,cy=Math.random()*512;ctx.strokeStyle='rgba(150,170,220,0.15)';ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,cy,12+Math.random()*8,0,Math.PI*2);ctx.stroke();}
+    } else {
+        return createTanGroundTexture();
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(5, 5);
+    return tex;
+}
+
 function createTanGroundTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 512; canvas.height = 512;
@@ -1439,9 +1507,10 @@ function init() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
     renderer.shadowMap.autoUpdate = true;
+    renderer.physicallyCorrectLights = true;
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     createSkybox();
@@ -1765,25 +1834,34 @@ function cycleSymmetry() {
 
 // ==================== LIGHTING ====================
 function setupLighting() {
-    hemiLight = new THREE.HemisphereLight(0x87CEEB, 0x8B7355, 1.0);
+    // Sky/ground hemisphere — warm sky, tan ground bounce
+    hemiLight = new THREE.HemisphereLight(0x9ad4f5, 0x806040, 1.4);
     scene.add(hemiLight);
-    ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
+    // Soft fill ambient
+    ambientLight = new THREE.AmbientLight(0xfff8f0, 0.55);
     scene.add(ambientLight);
-    sunLight = new THREE.DirectionalLight(0xfff5e0, 2.2);
-    sunLight.position.set(80, 120, 60);
+    // Primary sun — warm noon angle
+    sunLight = new THREE.DirectionalLight(0xfff5e0, 3.2);
+    sunLight.position.set(80, 140, 60);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 500;
-    sunLight.shadow.camera.left = -100;
-    sunLight.shadow.camera.right = 100;
-    sunLight.shadow.camera.top = 100;
-    sunLight.shadow.camera.bottom = -100;
-    sunLight.shadow.bias = -0.0005;
-    sunLight.shadow.radius = 4;
+    sunLight.shadow.mapSize.width = 4096;
+    sunLight.shadow.mapSize.height = 4096;
+    sunLight.shadow.camera.near = 1;
+    sunLight.shadow.camera.far = 600;
+    sunLight.shadow.camera.left = -130;
+    sunLight.shadow.camera.right = 130;
+    sunLight.shadow.camera.top = 130;
+    sunLight.shadow.camera.bottom = -130;
+    sunLight.shadow.bias = -0.0003;
+    sunLight.shadow.normalBias = 0.02;
+    sunLight.shadow.radius = 3;
     scene.add(sunLight);
-    rimLight = new THREE.DirectionalLight(0x87CEEB, 0.4);
+    // Cool sky bounce fill (opposite sun)
+    const fillLight = new THREE.DirectionalLight(0xb4d8ff, 0.7);
+    fillLight.position.set(-60, 50, -40);
+    scene.add(fillLight);
+    // Warm rim/backlight for depth
+    rimLight = new THREE.DirectionalLight(0xffe0b0, 0.55);
     rimLight.position.set(-50, 30, -50);
     scene.add(rimLight);
 }
@@ -1813,7 +1891,7 @@ function smoothResetCamera() {
 // ==================== GROUND ====================
 function createGround(type, matType) {
     if (ground) scene.remove(ground);
-    const colors = { grass:0x4a7c59, tan:0xC2A87D, dirt:0x8B4513, sand:0xF4A460, snow:0xFFFAFA, stone:0x808080 };
+    const colors = { grass:0x4a7c59, tan:0xC2A87D, dirt:0x8B4513, sand:0xF4A460, snow:0xFFFAFA, stone:0x808080, rock:0x6a6a6a };
     const baseColor = colors[matType] || colors.tan;
     const geo = new THREE.PlaneGeometry(120, 120, 64, 64);
     const pos = geo.attributes.position;
@@ -1835,19 +1913,18 @@ function createGround(type, matType) {
     }
     geo.computeVertexNormals();
 
-    const roughness = matType === 'tan' ? 0.95 : (matType === 'sand' ? 1 : 0.9);
+    const roughnessMap = { tan:0.95, sand:1.0, snow:0.85, grass:0.92, dirt:0.98, stone:0.88, rock:0.90 };
+    const roughness = roughnessMap[matType] ?? 0.9;
     const material = new THREE.MeshStandardMaterial({
-        color: baseColor, roughness, metalness: matType === 'tan' ? 0.01 : 0,
+        color: baseColor, roughness, metalness: (matType === 'stone' || matType === 'rock') ? 0.05 : 0.01,
         flatShading: type === 'mesa'
     });
 
-    // Apply tan procedural texture if no scene is active
-    if (matType === 'tan') {
-        const tex = createTanGroundTexture();
-        material.map = tex;
-        material.color.setHex(0xffffff); // Let texture drive color
-        material.needsUpdate = true;
-    }
+    // Apply procedural texture for all material types
+    const tex = matType === 'tan' ? createTanGroundTexture() : createMaterialTexture(matType);
+    material.map = tex;
+    material.color.setHex(0xffffff);
+    material.needsUpdate = true;
 
     ground = new THREE.Mesh(geo, material);
     ground.rotation.x = -Math.PI/2;
@@ -2005,22 +2082,29 @@ function toggleSnap() {
 function createBrickPattern(size, color) {
     const group = new THREE.Group();
     const c = new THREE.Color(color);
-    const mortarColor = new THREE.Color(0x888888);
-    const brickWidth = size * 0.3, brickHeight = size * 0.15, brickDepth = size * 0.15;
-    const gap = size * 0.02;
-    const brickGeo = new THREE.BoxGeometry(brickWidth-gap, brickHeight-gap, brickDepth-gap);
-    const brickMat = new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 });
-    const mortarMat = new THREE.MeshStandardMaterial({ color: mortarColor, roughness: 1 });
-    const backing = new THREE.Mesh(new THREE.BoxGeometry(size,size,size*0.1), mortarMat);
-    backing.position.z = -size * 0.45; group.add(backing);
-    const rows = 4, cols = 3;
-    for (let y = 0; y < rows; y++) {
-        const offset = (y % 2) * (brickWidth / 2);
-        for (let x = -1; x < cols; x++) {
-            const brick = new THREE.Mesh(brickGeo, brickMat);
-            brick.position.x = (x * brickWidth) + offset - (size * 0.1);
-            brick.position.y = (y * brickHeight) - (size * 0.3);
-            brick.position.z = 0; brick.castShadow = true; brick.receiveShadow = true;
+    const mortarMat = new THREE.MeshStandardMaterial({ color: 0x999090, roughness: 1 });
+    // Backing slab (mortar bed)
+    const backing = new THREE.Mesh(new THREE.BoxGeometry(size, size, size*0.08), mortarMat);
+    backing.position.z = -size*0.46; group.add(backing);
+    // Brick colors — slight variation row by row for realism
+    const brickColors = [
+        new THREE.Color(color),
+        new THREE.Color(color).offsetHSL(0, 0.04, 0.04),
+        new THREE.Color(color).offsetHSL(0, -0.03, -0.05),
+        new THREE.Color(color).offsetHSL(0, 0.02, 0.02),
+        new THREE.Color(color).offsetHSL(0, -0.02, -0.04),
+        new THREE.Color(color).offsetHSL(0, 0.03, 0.06),
+    ];
+    const bW = size*0.305, bH = size*0.125, bD = size*0.14;
+    const gap = size*0.018;
+    const rows = 6, cols = 4;
+    for (let y=0; y<rows; y++) {
+        const offset = (y % 2) * (bW/2);
+        const bMat = new THREE.MeshStandardMaterial({ color: brickColors[y % brickColors.length], roughness: 0.88 });
+        for (let x=-1; x<cols; x++) {
+            const brick = new THREE.Mesh(new THREE.BoxGeometry(bW-gap, bH-gap, bD), bMat);
+            brick.position.set((x*bW)+offset - size*0.15, y*bH - size*0.375, 0);
+            brick.castShadow = true; brick.receiveShadow = true;
             group.add(brick);
         }
     }
@@ -2168,30 +2252,65 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         case 'tube': geo=new THREE.CylinderGeometry(size*0.2,size*0.2,size,12,1,true); mat=new THREE.MeshStandardMaterial({color:c,roughness:0.3,metalness:0.5,side:THREE.DoubleSide}); break;
         case 'wall': {
             mesh=makeGroup();
-            const wlBody=new THREE.Mesh(new THREE.BoxGeometry(size,size*1.5,size*0.3),new THREE.MeshStandardMaterial({color:c,roughness:0.92}));mesh.add(wlBody);
-            const wlLineMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,-0.1,-0.15),roughness:1});
-            for(let wl=0;wl<4;wl++){const ln=new THREE.Mesh(new THREE.BoxGeometry(size*1.02,size*0.022,size*0.32),wlLineMat);ln.position.y=-size*0.6+wl*size*0.4;mesh.add(ln);}
+            const wlMat=new THREE.MeshStandardMaterial({color:c,roughness:0.92});
+            const wlDkMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,-0.1,-0.18),roughness:1});
+            const wlLtMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.1),roughness:0.8});
+            // Main body
+            const wlBody=new THREE.Mesh(new THREE.BoxGeometry(size,size*1.5,size*0.3),wlMat);mesh.add(wlBody);
+            // Coping stone (wider, slightly lighter)
+            const wlCope=new THREE.Mesh(new THREE.BoxGeometry(size*1.05,size*0.065,size*0.38),wlLtMat);wlCope.position.y=size*0.78;mesh.add(wlCope);
+            // Horizontal course lines (mortar)
+            for(let wl=0;wl<5;wl++){const ln=new THREE.Mesh(new THREE.BoxGeometry(size*1.02,size*0.016,size*0.32),wlDkMat);ln.position.y=-size*0.72+wl*size*0.37;mesh.add(ln);}
+            // Vertical joint lines (suggest individual stones)
+            for(let vl=0;vl<3;vl++){const vln=new THREE.Mesh(new THREE.BoxGeometry(size*0.016,size*1.52,size*0.32),wlDkMat);vln.position.x=-size*0.33+vl*size*0.33;mesh.add(vln);}
             break;
         }
         case 'window': {
             mesh=makeGroup();
             const wFrmMat=new THREE.MeshStandardMaterial({color:c,roughness:0.75});
-            const wGlsMat=new THREE.MeshPhysicalMaterial({color:0xaaddff,transparent:true,opacity:0.22,roughness:0.02,metalness:0,transmission:0.9,thickness:0.3,emissive:0x88ccff,emissiveIntensity:0.08});
-            const wGls=new THREE.Mesh(new THREE.BoxGeometry(size*0.82,size*0.82,size*0.05),wGlsMat);wGls.userData={isWindow:true};mesh.add(wGls);
-            const fTh=size*0.09;
-            [{w:size,h:fTh,x:0,y:size*0.46,z:0},{w:size,h:fTh,x:0,y:-size*0.46,z:0},{w:fTh,h:size,x:-size*0.46,y:0,z:0},{w:fTh,h:size,x:size*0.46,y:0,z:0}].forEach(f=>{const fb=new THREE.Mesh(new THREE.BoxGeometry(f.w,f.h,size*0.14),wFrmMat);fb.position.set(f.x,f.y,f.z);mesh.add(fb);});
+            const wLtMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.12),roughness:0.7});
+            const wGlsMat=new THREE.MeshPhysicalMaterial({color:0xaaddff,transparent:true,opacity:0.18,roughness:0.02,metalness:0,transmission:0.92,thickness:0.3,emissive:0x88ccff,emissiveIntensity:0.1});
+            // Recessed glass pane (4-pane with mullion + transom)
+            const wGls=new THREE.Mesh(new THREE.BoxGeometry(size*0.7,size*0.78,size*0.04),wGlsMat);wGls.position.z=-size*0.04;wGls.userData={isWindow:true};mesh.add(wGls);
+            // Mullion (vertical centre bar)
+            const wMull=new THREE.Mesh(new THREE.BoxGeometry(size*0.045,size*0.78,size*0.07),wFrmMat);wMull.position.z=-size*0.01;mesh.add(wMull);
+            // Transom (horizontal centre bar)
+            const wTrans=new THREE.Mesh(new THREE.BoxGeometry(size*0.7,size*0.045,size*0.07),wFrmMat);wTrans.position.z=-size*0.01;mesh.add(wTrans);
+            // Outer frame — 4 sides
+            const fTh=size*0.1;
+            [{w:size,h:fTh,x:0,y:size*0.44,z:0},{w:size,h:fTh,x:0,y:-size*0.44,z:0},{w:fTh,h:size*0.92,x:-size*0.45,y:0,z:0},{w:fTh,h:size*0.92,x:size*0.45,y:0,z:0}].forEach(f=>{const fb=new THREE.Mesh(new THREE.BoxGeometry(f.w,f.h,size*0.15),wFrmMat);fb.position.set(f.x,f.y,f.z);mesh.add(fb);});
+            // Window sill (protruding ledge below)
+            const wSill=new THREE.Mesh(new THREE.BoxGeometry(size*1.1,size*0.065,size*0.22),wLtMat);wSill.position.set(0,-size*0.47,size*0.08);mesh.add(wSill);
+            // Lintel (stone block above)
+            const wLint=new THREE.Mesh(new THREE.BoxGeometry(size*1.06,size*0.06,size*0.18),wLtMat);wLint.position.set(0,size*0.47,size*0.04);mesh.add(wLint);
             break;
         }
         case 'door': {
             mesh=makeGroup();
             const dWoodMat=new THREE.MeshStandardMaterial({color:c,roughness:0.85});
-            const dFrmMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.18),roughness:0.9});
+            const dPanelMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.09),roughness:0.88});
+            const dFrmMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.2),roughness:0.9});
+            const dStoneMat=new THREE.MeshStandardMaterial({color:0x999999,roughness:0.85});
+            const dMetalMat=new THREE.MeshStandardMaterial({color:0xDDAA44,metalness:1,roughness:0.15});
+            // Main door panel
             const dPanel=new THREE.Mesh(new THREE.BoxGeometry(size*0.75,size*1.75,size*0.1),dWoodMat);mesh.add(dPanel);
-            const fL=new THREE.Mesh(new THREE.BoxGeometry(size*0.09,size*1.95,size*0.14),dFrmMat);fL.position.set(-size*0.42,0,0);
-            const fR=new THREE.Mesh(new THREE.BoxGeometry(size*0.09,size*1.95,size*0.14),dFrmMat);fR.position.set(size*0.42,0,0);
-            const fT=new THREE.Mesh(new THREE.BoxGeometry(size*0.93,size*0.09,size*0.14),dFrmMat);fT.position.set(0,size*0.97,0);
+            // Four raised panels (2 top, 2 bottom)
+            [[size*0.17,size*0.55],[size*-0.17,size*0.55],[size*0.17,-size*0.25],[size*-0.17,-size*0.25]].forEach(([px,py])=>{
+                const p=new THREE.Mesh(new THREE.BoxGeometry(size*0.27,size*0.52,size*0.04),dPanelMat);p.position.set(px,py,size*0.07);mesh.add(p);
+            });
+            // Frame — sides, top
+            const fL=new THREE.Mesh(new THREE.BoxGeometry(size*0.1,size*1.98,size*0.16),dFrmMat);fL.position.set(-size*0.43,0,0);
+            const fR=new THREE.Mesh(new THREE.BoxGeometry(size*0.1,size*1.98,size*0.16),dFrmMat);fR.position.set(size*0.43,0,0);
+            const fT=new THREE.Mesh(new THREE.BoxGeometry(size*0.96,size*0.1,size*0.16),dFrmMat);fT.position.set(0,size*0.99,0);
             mesh.add(fL,fR,fT);
-            const dKnob=new THREE.Mesh(new THREE.SphereGeometry(size*0.055,10,8),new THREE.MeshStandardMaterial({color:0xDDAA44,metalness:1,roughness:0.15}));dKnob.position.set(size*0.28,-size*0.1,size*0.1);mesh.add(dKnob);
+            // Transom window above door
+            const dTrans=new THREE.Mesh(new THREE.BoxGeometry(size*0.65,size*0.2,size*0.05),new THREE.MeshPhysicalMaterial({color:0xaaddff,transparent:true,opacity:0.3,transmission:0.85,thickness:0.2,emissive:0x88ccff,emissiveIntensity:0.08}));dTrans.position.set(0,size*1.07,size*0.07);mesh.add(dTrans);
+            // Stone threshold step
+            const dStep=new THREE.Mesh(new THREE.BoxGeometry(size*1.02,size*0.07,size*0.32),dStoneMat);dStep.position.set(0,-size*0.9,size*0.14);mesh.add(dStep);
+            // Knob
+            const dKnob=new THREE.Mesh(new THREE.SphereGeometry(size*0.055,10,8),dMetalMat);dKnob.position.set(size*0.28,-size*0.1,size*0.11);mesh.add(dKnob);
+            // Hinges (2)
+            for(let hi=0;hi<2;hi++){const hg=new THREE.Mesh(new THREE.BoxGeometry(size*0.05,size*0.09,size*0.05),dMetalMat);hg.position.set(-size*0.37,-size*0.3+hi*size*0.65,size*0.09);mesh.add(hg);}
             break;
         }
         case 'fence': case 'railing': case 'ladder': {
@@ -2205,11 +2324,24 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         case 'pillar': {
             mesh=makeGroup();
             const pilMat=new THREE.MeshStandardMaterial({color:c,roughness:0.55});
-            const pilAcc=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.1),roughness:0.45});
-            const pBase1=new THREE.Mesh(new THREE.BoxGeometry(size*0.75,size*0.1,size*0.75),pilMat);pBase1.position.y=size*0.05;
-            const pShaft=new THREE.Mesh(new THREE.CylinderGeometry(size*0.22,size*0.26,size*1.7,14),pilMat);pShaft.position.y=size*1.03;pShaft.castShadow=true;
-            const pAba=new THREE.Mesh(new THREE.BoxGeometry(size*0.75,size*0.12,size*0.75),pilMat);pAba.position.y=size*2.1;
-            mesh.add(pBase1,pShaft,pAba);
+            const pilAccMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.12),roughness:0.4});
+            const pilDkMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.07),roughness:0.6});
+            // Double plinth base
+            const pPlinth=new THREE.Mesh(new THREE.BoxGeometry(size*0.86,size*0.07,size*0.86),pilMat);pPlinth.position.y=size*0.035;
+            const pBase=new THREE.Mesh(new THREE.BoxGeometry(size*0.72,size*0.09,size*0.72),pilMat);pBase.position.y=size*0.115;
+            // Base torus moulding
+            const pBaseTorus=new THREE.Mesh(new THREE.TorusGeometry(size*0.26,size*0.04,8,24),pilAccMat);pBaseTorus.rotation.x=Math.PI/2;pBaseTorus.position.y=size*0.22;
+            mesh.add(pPlinth,pBase,pBaseTorus);
+            // Fluted shaft (higher segment count = smoother, flutes via vertex shader trick)
+            const pShaft=new THREE.Mesh(new THREE.CylinderGeometry(size*0.21,size*0.255,size*1.65,20),pilMat);pShaft.position.y=size*1.07;pShaft.castShadow=true;mesh.add(pShaft);
+            // Flutes (12 thin cylinders around shaft)
+            for(let fi=0;fi<12;fi++){const fa=(fi/12)*Math.PI*2;const flute=new THREE.Mesh(new THREE.CylinderGeometry(size*0.016,size*0.02,size*1.63,5),pilDkMat);flute.position.set(Math.cos(fa)*size*0.224,size*1.07,Math.sin(fa)*size*0.224);mesh.add(flute);}
+            // Neck ring
+            const pNeck=new THREE.Mesh(new THREE.TorusGeometry(size*0.215,size*0.028,6,20),pilAccMat);pNeck.rotation.x=Math.PI/2;pNeck.position.y=size*1.9;mesh.add(pNeck);
+            // Echinus (spreading capital)
+            const pEch=new THREE.Mesh(new THREE.CylinderGeometry(size*0.46,size*0.225,size*0.16,20),pilMat);pEch.position.y=size*1.98;mesh.add(pEch);
+            // Abacus slab
+            const pAba=new THREE.Mesh(new THREE.BoxGeometry(size*0.86,size*0.09,size*0.86),pilMat);pAba.position.y=size*2.115;mesh.add(pAba);
             break;
         }
         case 'brick': mesh=createBrickPattern(size,color); break;
@@ -2222,32 +2354,68 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
             for(let i=0;i<5;i++){const bar=new THREE.Mesh(new THREE.BoxGeometry(size*0.05,size*1.3,size*0.05),frameMat);bar.position.x=(i-2)*size*0.4;ggroup.add(bar);}
             mesh=ggroup; break;
         }
-        case 'roof':
+        case 'roof': {
             mesh=makeGroup();
+            const roofMat=new THREE.MeshStandardMaterial({color:c,roughness:0.72});
+            const ridgeMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.18),roughness:0.85});
+            const fascMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.12),roughness:0.8});
+            // Main pitched roof panels
             const roofShape=new THREE.Shape();
-            roofShape.moveTo(-size*0.5,0);roofShape.lineTo(size*0.5,0);roofShape.lineTo(0,size*0.5);roofShape.lineTo(-size*0.5,0);
-            const roofExtrude=new THREE.ExtrudeGeometry(roofShape,{depth:size,bevelEnabled:true,bevelThickness:0.02,bevelSize:0.02,bevelSegments:2});
-            const roofMesh=new THREE.Mesh(roofExtrude,new THREE.MeshStandardMaterial({color:c,roughness:0.7}));
-            roofMesh.rotation.y=Math.PI/2;roofMesh.position.y=size*0.5;roofMesh.castShadow=true;mesh.add(roofMesh);
+            roofShape.moveTo(-size*0.54,0);roofShape.lineTo(size*0.54,0);roofShape.lineTo(0,size*0.54);roofShape.lineTo(-size*0.54,0);
+            const roofExtrude=new THREE.ExtrudeGeometry(roofShape,{depth:size*1.08,bevelEnabled:true,bevelThickness:0.025,bevelSize:0.025,bevelSegments:2});
+            const roofMesh=new THREE.Mesh(roofExtrude,roofMat);
+            roofMesh.rotation.y=Math.PI/2;roofMesh.position.set(-size*0.54,size*0.5,0);roofMesh.castShadow=true;mesh.add(roofMesh);
+            // Ridge cap beam along peak
+            const ridge=new THREE.Mesh(new THREE.BoxGeometry(size*0.1,size*0.1,size*1.12),ridgeMat);ridge.position.set(0,size*1.04,0);mesh.add(ridge);
+            // Fascia boards (eaves front & back)
+            for(let s of[-1,1]){const f=new THREE.Mesh(new THREE.BoxGeometry(size*1.14,size*0.065,size*0.07),fascMat);f.position.set(0,size*0.5,s*size*0.565);mesh.add(f);}
+            // Gable bargeboard trim (left & right ends)
+            for(let s of[-1,1]){const bg=new THREE.Mesh(new THREE.BoxGeometry(size*0.065,size*0.76,size*0.06),fascMat);bg.rotation.z=s*-0.79;bg.position.set(s*size*0.28,size*0.79,0);mesh.add(bg);}
             break;
+        }
         case 'skyscraper_glass': {
             mesh=makeGroup();
-            const glassMat=new THREE.MeshPhysicalMaterial({color:0x2a4d6a,metalness:0.9,roughness:0.05,transmission:0.3,thickness:0.5,clearcoat:1.0,clearcoatRoughness:0.1,reflectivity:1.0});
-            const windowMat=new THREE.MeshStandardMaterial({color:0x87CEEB,emissive:0x87CEEB,emissiveIntensity:0.3,metalness:0.8,roughness:0.1});
-            const towerHeight=size*4,towerWidth=size*0.8;
-            const tower=new THREE.Mesh(new THREE.BoxGeometry(towerWidth,towerHeight,towerWidth),glassMat);tower.position.y=towerHeight/2;tower.castShadow=true;tower.receiveShadow=true;mesh.add(tower);
-            const floors=8,windowsPerFloor=3;
-            for(let f=0;f<floors;f++)for(let w=0;w<windowsPerFloor;w++){const win=new THREE.Mesh(new THREE.BoxGeometry(towerWidth*0.15,towerHeight*0.08,towerWidth*0.05),windowMat);win.position.set((w-1)*towerWidth*0.25,(f+0.5)*(towerHeight/floors)+size*0.2,towerWidth/2+size*0.02);mesh.add(win);}
-            const spire=new THREE.Mesh(new THREE.CylinderGeometry(size*0.02,size*0.02,size*0.8,8),new THREE.MeshStandardMaterial({color:0x888888,metalness:1.0,roughness:0.2}));spire.position.y=towerHeight+size*0.4;mesh.add(spire);
+            const glassMat=new THREE.MeshPhysicalMaterial({color:0x1a3d5a,metalness:0.9,roughness:0.04,transmission:0.35,thickness:0.5,clearcoat:1.0,clearcoatRoughness:0.08,reflectivity:1.0});
+            const winMat=new THREE.MeshStandardMaterial({color:0x9DCFEA,emissive:0x6aaabb,emissiveIntensity:0.22,metalness:0.7,roughness:0.08});
+            const frameMat=new THREE.MeshStandardMaterial({color:0x111820,metalness:0.95,roughness:0.05});
+            const tH=size*4.5,tW=size*0.85;
+            // Podium base
+            const pod=new THREE.Mesh(new THREE.BoxGeometry(tW*1.35,size*0.28,tW*1.35),frameMat);pod.position.y=size*0.14;pod.castShadow=true;mesh.add(pod);
+            // Main tower
+            const tower=new THREE.Mesh(new THREE.BoxGeometry(tW,tH,tW),glassMat);tower.position.y=tH/2+size*0.28;tower.castShadow=true;tower.receiveShadow=true;mesh.add(tower);
+            // Horizontal spandrel bands every floor (structural grid)
+            for(let f=0;f<11;f++){const band=new THREE.Mesh(new THREE.BoxGeometry(tW+size*0.02,size*0.045,tW+size*0.02),frameMat);band.position.y=(f+1)*(tH/11)+size*0.28;mesh.add(band);}
+            // Windows on all 4 sides
+            const sides=[{ax:'z',sign:1},{ax:'z',sign:-1},{ax:'x',sign:1},{ax:'x',sign:-1}];
+            for(let f=0;f<10;f++){for(let w=0;w<3;w++){sides.forEach(s=>{const win=new THREE.Mesh(new THREE.BoxGeometry(tW*0.19,tH*0.067,size*0.025),winMat);const fy=(f+0.55)*(tH/11)+size*0.28,wx=(w-1)*tW*0.29;if(s.ax==='z'){win.position.set(wx,fy,s.sign*(tW/2+size*0.013));}else{win.rotation.y=Math.PI/2;win.position.set(s.sign*(tW/2+size*0.013),fy,wx);}mesh.add(win);});}}
+            // Vertical corner columns
+            for(let ci=0;ci<4;ci++){const ca=(ci/4)*Math.PI*2+Math.PI/4;const col=new THREE.Mesh(new THREE.BoxGeometry(size*0.055,tH+size*0.28,size*0.055),frameMat);col.position.set(Math.cos(ca)*tW*0.44,tH/2+size*0.28,Math.sin(ca)*tW*0.44);mesh.add(col);}
+            // Crown setback
+            const crown=new THREE.Mesh(new THREE.BoxGeometry(tW*0.65,size*0.14,tW*0.65),frameMat);crown.position.y=tH+size*0.35;mesh.add(crown);
+            // Antenna spire
+            const spire=new THREE.Mesh(new THREE.CylinderGeometry(size*0.012,size*0.035,size*1.1,8),new THREE.MeshStandardMaterial({color:0xaaaaaa,metalness:1.0,roughness:0.15}));spire.position.y=tH+size*1.0;mesh.add(spire);
             break;
         }
         case 'skyscraper_modern': {
             mesh=makeGroup();
-            const modernMat=new THREE.MeshStandardMaterial({color:0xc0c0c0,metalness:0.7,roughness:0.3});
-            const darkMat=new THREE.MeshStandardMaterial({color:0x2a2a2a,metalness:0.5,roughness:0.4});
-            const base=new THREE.Mesh(new THREE.BoxGeometry(size,size*1.5,size),modernMat);base.position.y=size*0.75;base.castShadow=true;mesh.add(base);
-            const middle=new THREE.Mesh(new THREE.BoxGeometry(size*0.7,size*2,size*0.7),modernMat);middle.position.y=size*2.5;middle.castShadow=true;mesh.add(middle);
-            const top=new THREE.Mesh(new THREE.BoxGeometry(size*0.5,size*1.5,size*0.5),darkMat);top.position.y=size*4.25;top.castShadow=true;mesh.add(top);
+            const modMat=new THREE.MeshStandardMaterial({color:0xcccccc,metalness:0.65,roughness:0.3});
+            const dkMat=new THREE.MeshStandardMaterial({color:0x222232,metalness:0.5,roughness:0.4});
+            const acMat=new THREE.MeshStandardMaterial({color:0x1a3a5a,metalness:0.7,roughness:0.2});
+            const winMat=new THREE.MeshStandardMaterial({color:0x8899bb,emissive:0x334466,emissiveIntensity:0.2,metalness:0.6,roughness:0.12});
+            // Wide podium
+            const pod=new THREE.Mesh(new THREE.BoxGeometry(size*1.1,size*0.12,size*1.1),acMat);pod.position.y=size*0.06;pod.castShadow=true;mesh.add(pod);
+            // 3 stepped volumes
+            const vols=[{w:size,h:size*1.5,y:size*0.75},{w:size*0.72,h:size*2.1,y:size*2.55},{w:size*0.5,h:size*1.6,y:size*4.3}];
+            vols.forEach(v=>{const b=new THREE.Mesh(new THREE.BoxGeometry(v.w,v.h,v.w),modMat);b.position.y=v.y;b.castShadow=true;mesh.add(b);});
+            // Cornice strips between setbacks
+            [{y:size*1.56,w:size*1.05},{y:size*3.62,w:size*0.77}].forEach(cr=>{const c=new THREE.Mesh(new THREE.BoxGeometry(cr.w,size*0.055,cr.w),acMat);c.position.y=cr.y;mesh.add(c);});
+            // Window grid on base (front face)
+            for(let row=0;row<4;row++)for(let col=0;col<3;col++){const win=new THREE.Mesh(new THREE.BoxGeometry(size*0.2,size*0.24,size*0.025),winMat);win.position.set((col-1)*size*0.3,size*0.35+row*size*0.37,size*0.515);mesh.add(win);}
+            // Window grid on mid volume (front)
+            for(let row=0;row<5;row++)for(let col=0;col<2;col++){const win=new THREE.Mesh(new THREE.BoxGeometry(size*0.19,size*0.28,size*0.025),winMat);win.position.set((col-0.5)*size*0.28,size*1.62+row*size*0.41,size*0.375);mesh.add(win);}
+            // Rooftop penthouse + antenna
+            const pent=new THREE.Mesh(new THREE.BoxGeometry(size*0.28,size*0.28,size*0.28),dkMat);pent.position.y=size*5.24;mesh.add(pent);
+            const ant=new THREE.Mesh(new THREE.CylinderGeometry(size*0.012,size*0.02,size*0.45,6),new THREE.MeshStandardMaterial({color:0x888888,metalness:1,roughness:0.2}));ant.position.y=size*5.6;mesh.add(ant);
             break;
         }
         case 'skyscraper_slim': {
@@ -2261,23 +2429,59 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         }
         case 'skyscraper_wide': {
             mesh=makeGroup();
-            const concreteMat=new THREE.MeshStandardMaterial({color:0x999999,roughness:0.8});
-            const wideWidth=size*2,wideHeight=size*2,wideDepth=size*1.2;
-            const wideBase=new THREE.Mesh(new THREE.BoxGeometry(wideWidth,wideHeight,wideDepth),concreteMat);wideBase.position.y=wideHeight/2;wideBase.castShadow=true;mesh.add(wideBase);
+            const concMat=new THREE.MeshStandardMaterial({color:0xb0b0b0,roughness:0.8});
+            const dkMat2=new THREE.MeshStandardMaterial({color:0x222222,metalness:0.4,roughness:0.5});
+            const winMat2=new THREE.MeshStandardMaterial({color:0x8899cc,emissive:0x445588,emissiveIntensity:0.2,metalness:0.55,roughness:0.15});
+            const wW=size*2,wH=size*2.2,wD=size*1.3;
+            // Main body
+            const wb=new THREE.Mesh(new THREE.BoxGeometry(wW,wH,wD),concMat);wb.position.y=wH/2;wb.castShadow=true;mesh.add(wb);
+            // Top parapet/cornice
+            const corn=new THREE.Mesh(new THREE.BoxGeometry(wW*1.04,size*0.09,wD*1.04),dkMat2);corn.position.y=wH+size*0.045;mesh.add(corn);
+            // Window grid — front face (4 cols × 5 rows)
+            for(let row=0;row<5;row++)for(let col=0;col<4;col++){const win=new THREE.Mesh(new THREE.BoxGeometry(wW*0.14,wH*0.12,size*0.03),winMat2);win.position.set(-wW*0.31+col*wW*0.21,wH*0.15+row*wH*0.17,wD/2+size*0.015);mesh.add(win);}
+            // Window grid — side face (2 cols × 5 rows)
+            for(let row=0;row<5;row++)for(let col=0;col<2;col++){const win=new THREE.Mesh(new THREE.BoxGeometry(wD*0.22,wH*0.12,size*0.03),winMat2);win.rotation.y=Math.PI/2;win.position.set(wW/2+size*0.015,wH*0.15+row*wH*0.17,-wD*0.22+col*wD*0.44);mesh.add(win);}
+            // Vertical pilasters (structural ribs on facade)
+            for(let pi=0;pi<5;pi++){const rib=new THREE.Mesh(new THREE.BoxGeometry(size*0.055,wH,size*0.07),concMat);rib.position.set(-wW*0.4+pi*wW*0.2,wH/2,wD/2+size*0.035);mesh.add(rib);}
+            // Entrance canopy
+            const can=new THREE.Mesh(new THREE.BoxGeometry(wW*0.38,size*0.055,size*0.45),dkMat2);can.position.set(0,size*0.24,wD/2+size*0.22);mesh.add(can);
+            for(let ec=0;ec<2;ec++){const ecol=new THREE.Mesh(new THREE.CylinderGeometry(size*0.048,size*0.056,size*0.24,10),concMat);ecol.position.set((ec-0.5)*wW*0.28,size*0.12,wD/2+size*0.42);mesh.add(ecol);}
             break;
         }
         case 'skyscraper_stepped': {
             mesh=makeGroup();
-            const stepMat=new THREE.MeshStandardMaterial({color:c,roughness:0.5,metalness:0.3});
-            const steps=5;
-            for(let i=0;i<steps;i++){const stepSize=size*(1-i*0.15),stepHeight=size*0.8;const step=new THREE.Mesh(new THREE.BoxGeometry(stepSize,stepHeight,stepSize),stepMat);step.position.y=i*stepHeight+stepHeight/2;step.castShadow=true;mesh.add(step);}
+            const stepMat=new THREE.MeshStandardMaterial({color:c,roughness:0.48,metalness:0.3});
+            const stepAccMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.2),metalness:0.6,roughness:0.2});
+            const stepWinMat=new THREE.MeshStandardMaterial({color:0x88aabb,emissive:0x336677,emissiveIntensity:0.18,metalness:0.5,roughness:0.15});
+            const steps=5,sH=size*0.9;
+            for(let i=0;i<steps;i++){
+                const sW=size*(1-i*0.15);
+                const step=new THREE.Mesh(new THREE.BoxGeometry(sW,sH,sW),stepMat);step.position.y=i*sH+sH/2;step.castShadow=true;mesh.add(step);
+                // Setback cornice strip
+                const cr=new THREE.Mesh(new THREE.BoxGeometry(sW*1.05,size*0.05,sW*1.05),stepAccMat);cr.position.y=(i+1)*sH;mesh.add(cr);
+                // Windows per tier (front face, 2 per tier)
+                for(let w=0;w<2;w++){const win=new THREE.Mesh(new THREE.BoxGeometry(sW*0.22,sH*0.42,size*0.025),stepWinMat);win.position.set((w-0.5)*sW*0.38,i*sH+sH*0.5,sW/2+size*0.013);mesh.add(win);}
+            }
+            // Finial at top
+            const fin=new THREE.Mesh(new THREE.CylinderGeometry(0,size*0.12,size*0.35,8),stepAccMat);fin.position.y=steps*sH+size*0.175;mesh.add(fin);
             break;
         }
         case 'skyscraper_twisted': {
             mesh=makeGroup();
-            const twistMat=new THREE.MeshStandardMaterial({color:0xe0e0e0,metalness:0.6,roughness:0.2});
-            const twistSegments=8,twistHeight=size*4,segmentHeight=twistHeight/twistSegments;
-            for(let i=0;i<twistSegments;i++){const twistWidth=size*(0.9-i*0.05);const segment=new THREE.Mesh(new THREE.BoxGeometry(twistWidth,segmentHeight,twistWidth),twistMat);segment.position.y=i*segmentHeight+segmentHeight/2;segment.rotation.y=i*(Math.PI/8);segment.castShadow=true;mesh.add(segment);}
+            const twistMat=new THREE.MeshStandardMaterial({color:0xdde0e8,metalness:0.65,roughness:0.18});
+            const twistEdgeMat=new THREE.MeshStandardMaterial({color:0x1a1a2a,metalness:0.8,roughness:0.1});
+            const twistWinMat=new THREE.MeshStandardMaterial({color:0x99bbcc,emissive:0x446677,emissiveIntensity:0.15,metalness:0.6,roughness:0.1});
+            const twN=10,twH=size*4.5,segH=twH/twN;
+            for(let i=0;i<twN;i++){
+                const tW=size*(0.88-i*0.04);
+                const seg=new THREE.Mesh(new THREE.BoxGeometry(tW,segH,tW),twistMat);seg.position.y=i*segH+segH/2;seg.rotation.y=i*(Math.PI/10);seg.castShadow=true;mesh.add(seg);
+                // Edge fins on each segment
+                for(let fi=0;fi<4;fi++){const fa=fi*Math.PI/2+i*(Math.PI/10);const fin=new THREE.Mesh(new THREE.BoxGeometry(tW*0.06,segH*0.96,tW*0.06),twistEdgeMat);fin.position.set(Math.cos(fa+Math.PI/4)*tW*0.5,i*segH+segH/2,Math.sin(fa+Math.PI/4)*tW*0.5);fin.rotation.y=fa+Math.PI/4;mesh.add(fin);}
+                // Windows on front face of each segment
+                for(let w=0;w<2;w++){const win=new THREE.Mesh(new THREE.BoxGeometry(tW*0.28,segH*0.55,size*0.02),twistWinMat);win.position.set((w-0.5)*tW*0.38,i*segH+segH/2,tW/2+size*0.01);win.rotation.y=i*(Math.PI/10);mesh.add(win);}
+            }
+            // Crown cap
+            const cap=new THREE.Mesh(new THREE.CylinderGeometry(size*0.05,size*0.22,size*0.3,16),twistEdgeMat);cap.position.y=twH+size*0.15;mesh.add(cap);
             break;
         }
         case 'stair': {
@@ -2310,6 +2514,208 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         case 'glow': geo=new THREE.BoxGeometry(size,size,size); mat=new THREE.MeshStandardMaterial({color:0xffff00,emissive:0xffff00,emissiveIntensity:3.0,toneMapped:false}); break;
         case 'fabric': geo=new THREE.BoxGeometry(size,size,size); mat=new THREE.MeshStandardMaterial({color:c,roughness:1}); break;
         case 'leaves': geo=new THREE.BoxGeometry(size,size,size); mat=new THREE.MeshStandardMaterial({color:c,roughness:0.8,flatShading:true}); break;
+
+        case 'canopy': {
+            mesh=makeGroup();
+            const roofMat=new THREE.MeshStandardMaterial({color:c,roughness:0.6,metalness:0.55});
+            const suppMat=new THREE.MeshStandardMaterial({color:0x888888,metalness:0.85,roughness:0.2});
+            // Flat canopy roof panel
+            const roof=new THREE.Mesh(new THREE.BoxGeometry(size*2.4,size*0.06,size*1.4),roofMat);
+            roof.position.y=size*0.97; roof.castShadow=true; mesh.add(roof);
+            // Front fascia
+            const fas=new THREE.Mesh(new THREE.BoxGeometry(size*2.4,size*0.18,size*0.04),roofMat);
+            fas.position.set(0,size*0.88,-size*0.7); mesh.add(fas);
+            // Back fascia
+            const fas2=fas.clone(); fas2.position.z=size*0.7; mesh.add(fas2);
+            // 4 support columns
+            [[-0.95,-0.55],[0.95,-0.55],[-0.95,0.55],[0.95,0.55]].forEach(([cx,cz])=>{
+                const col=new THREE.Mesh(new THREE.CylinderGeometry(size*0.04,size*0.05,size*0.95,8),suppMat);
+                col.position.set(cx*size,size*0.475,cz*size); mesh.add(col);
+            });
+            // Canopy stripe lines
+            for(let i=-1;i<=1;i++){
+                const stripe=new THREE.Mesh(new THREE.BoxGeometry(size*2.42,size*0.065,size*0.08),
+                    new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.7}));
+                stripe.position.set(0,size*0.97,i*size*0.4); mesh.add(stripe);
+            }
+            break;
+        }
+        case 'fuel_pump': {
+            mesh=makeGroup();
+            const bodyMat=new THREE.MeshStandardMaterial({color:c,roughness:0.4,metalness:0.3});
+            const screenMat=new THREE.MeshStandardMaterial({color:0x1a1a2e,emissive:0x00aaff,emissiveIntensity:0.4,roughness:0.15});
+            const hoseMat=new THREE.MeshStandardMaterial({color:0x222222,roughness:0.9});
+            // Main pump body
+            const body=new THREE.Mesh(new THREE.BoxGeometry(size*0.38,size*1.1,size*0.22),bodyMat);
+            body.position.y=size*0.55; body.castShadow=true; mesh.add(body);
+            // Base plinth
+            const base=new THREE.Mesh(new THREE.BoxGeometry(size*0.44,size*0.1,size*0.28),bodyMat);
+            base.position.y=size*0.05; mesh.add(base);
+            // Screen panel
+            const screen=new THREE.Mesh(new THREE.BoxGeometry(size*0.28,size*0.2,size*0.025),screenMat);
+            screen.position.set(0,size*0.75,size*0.12); mesh.add(screen);
+            // Display digits (emissive strip)
+            const disp=new THREE.Mesh(new THREE.BoxGeometry(size*0.22,size*0.09,size*0.022),
+                new THREE.MeshStandardMaterial({color:0xff6600,emissive:0xff6600,emissiveIntensity:0.9,toneMapped:false}));
+            disp.position.set(0,size*0.62,size*0.12); mesh.add(disp);
+            // Pump handle/hose nozzle
+            const hose=new THREE.Mesh(new THREE.CylinderGeometry(size*0.018,size*0.018,size*0.28,6),hoseMat);
+            hose.rotation.z=Math.PI/3; hose.position.set(size*0.22,size*0.65,0); mesh.add(hose);
+            const nozzle=new THREE.Mesh(new THREE.CylinderGeometry(size*0.025,size*0.015,size*0.1,6),hoseMat);
+            nozzle.rotation.z=Math.PI/2; nozzle.position.set(size*0.34,size*0.55,0); mesh.add(nozzle);
+            // Brand color band
+            const band=new THREE.Mesh(new THREE.BoxGeometry(size*0.4,size*0.08,size*0.24),
+                new THREE.MeshStandardMaterial({color:0xdd2222,roughness:0.5}));
+            band.position.y=size*0.95; mesh.add(band);
+            break;
+        }
+        case 'sign': {
+            mesh=makeGroup();
+            const postMat=new THREE.MeshStandardMaterial({color:0x666666,metalness:0.8,roughness:0.25});
+            const panelMat=new THREE.MeshStandardMaterial({color:c,roughness:0.45,metalness:0.1});
+            const textMat=new THREE.MeshStandardMaterial({color:0xffffff,emissive:0xffffff,emissiveIntensity:0.35,roughness:0.6});
+            // Post
+            const post=new THREE.Mesh(new THREE.CylinderGeometry(size*0.04,size*0.045,size*1.2,8),postMat);
+            post.position.y=size*0.6; mesh.add(post);
+            // Sign panel (wide billboard)
+            const panel=new THREE.Mesh(new THREE.BoxGeometry(size*1.2,size*0.42,size*0.055),panelMat);
+            panel.position.y=size*1.28; panel.castShadow=true; mesh.add(panel);
+            // Frame border
+            const frame=new THREE.Mesh(new THREE.BoxGeometry(size*1.26,size*0.48,size*0.035),
+                new THREE.MeshStandardMaterial({color:0x333333,metalness:0.7,roughness:0.3}));
+            frame.position.y=size*1.28; frame.position.z=-size*0.01; mesh.add(frame);
+            // Text bar on panel
+            const txt=new THREE.Mesh(new THREE.BoxGeometry(size*0.9,size*0.12,size*0.058),textMat);
+            txt.position.y=size*1.28; mesh.add(txt);
+            break;
+        }
+        case 'flagpole': {
+            mesh=makeGroup();
+            const poleMat=new THREE.MeshStandardMaterial({color:0xbbbbbb,metalness:0.95,roughness:0.12});
+            const flagMat=new THREE.MeshStandardMaterial({color:c,roughness:0.9,side:THREE.DoubleSide});
+            // Pole
+            const pole=new THREE.Mesh(new THREE.CylinderGeometry(size*0.025,size*0.04,size*2.6,10),poleMat);
+            pole.position.y=size*1.3; mesh.add(pole);
+            // Base footing
+            const foot=new THREE.Mesh(new THREE.CylinderGeometry(size*0.14,size*0.18,size*0.12,10),poleMat);
+            foot.position.y=size*0.06; mesh.add(foot);
+            // Flag (tapered rectangular shape)
+            const flagShape=new THREE.Shape();
+            flagShape.moveTo(0,0); flagShape.lineTo(0,size*0.48); flagShape.lineTo(size*0.7,size*0.38); flagShape.lineTo(size*0.7,size*0.1); flagShape.lineTo(0,0);
+            const flagGeo=new THREE.ShapeGeometry(flagShape);
+            const flag=new THREE.Mesh(flagGeo,flagMat);
+            flag.position.set(size*0.025,size*2.15,0); mesh.add(flag);
+            // Flag stripe (accent color)
+            const stripeGeo=new THREE.PlaneGeometry(size*0.7,size*0.12);
+            const stripe=new THREE.Mesh(stripeGeo,new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.9,side:THREE.DoubleSide}));
+            stripe.position.set(size*0.375,size*2.39,size*0.002); mesh.add(stripe);
+            // Halyard line
+            const halyard=new THREE.Mesh(new THREE.CylinderGeometry(size*0.006,size*0.006,size*2.2,4),
+                new THREE.MeshStandardMaterial({color:0xeecc88,roughness:0.7}));
+            halyard.position.set(size*0.025,size*1.2,0); mesh.add(halyard);
+            break;
+        }
+        case 'bollard': {
+            mesh=makeGroup();
+            const bollMat=new THREE.MeshStandardMaterial({color:c,metalness:0.6,roughness:0.35});
+            const stripeMat=new THREE.MeshStandardMaterial({color:0xffdd00,roughness:0.7});
+            // Main cylinder
+            const cyl=new THREE.Mesh(new THREE.CylinderGeometry(size*0.09,size*0.11,size*0.55,12),bollMat);
+            cyl.position.y=size*0.275; cyl.castShadow=true; mesh.add(cyl);
+            // Dome cap
+            const cap=new THREE.Mesh(new THREE.SphereGeometry(size*0.092,10,8,0,Math.PI*2,0,Math.PI/2),bollMat);
+            cap.position.y=size*0.55; mesh.add(cap);
+            // Safety reflective stripe
+            const ring=new THREE.Mesh(new THREE.CylinderGeometry(size*0.093,size*0.093,size*0.055,12),stripeMat);
+            ring.position.y=size*0.32; mesh.add(ring);
+            // Base plate
+            const base=new THREE.Mesh(new THREE.CylinderGeometry(size*0.14,size*0.14,size*0.025,12),bollMat);
+            base.position.y=size*0.012; mesh.add(base);
+            break;
+        }
+        case 'bench': {
+            mesh=makeGroup();
+            const woodMat=new THREE.MeshStandardMaterial({color:0x8B5E3C,roughness:0.85,metalness:0});
+            const metalMat=new THREE.MeshStandardMaterial({color:0x555555,metalness:0.8,roughness:0.3});
+            // Seat planks (3)
+            for(let i=0;i<3;i++){
+                const plank=new THREE.Mesh(new THREE.BoxGeometry(size*0.14,size*0.045,size*0.85),woodMat);
+                plank.position.set((i-1)*size*0.17,size*0.28,0); plank.castShadow=true; mesh.add(plank);
+            }
+            // Back rest planks (2)
+            for(let i=0;i<2;i++){
+                const bp=new THREE.Mesh(new THREE.BoxGeometry(size*0.14,size*0.045,size*0.85),woodMat);
+                bp.rotation.x=Math.PI*0.12;
+                bp.position.set((i-0.5)*size*0.17,size*0.5,size*0.04); mesh.add(bp);
+            }
+            // Metal legs (4 pairs, angled)
+            [[-0.35,0.32],[0.35,0.32],[-0.35,-0.32],[0.35,-0.32]].forEach(([lx,lz])=>{
+                const leg=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.3,size*0.04),metalMat);
+                leg.position.set(lx*size,size*0.15,lz*size); mesh.add(leg);
+            });
+            // Back support bar
+            const bar=new THREE.Mesh(new THREE.BoxGeometry(size*0.88,size*0.04,size*0.04),metalMat);
+            bar.position.set(0,size*0.56,size*0.12); mesh.add(bar);
+            break;
+        }
+        case 'hvac': {
+            mesh=makeGroup();
+            const unitMat=new THREE.MeshStandardMaterial({color:0x9aabad,metalness:0.6,roughness:0.5});
+            const grillMat=new THREE.MeshStandardMaterial({color:0x6a7a88,metalness:0.7,roughness:0.4});
+            const fanMat=new THREE.MeshStandardMaterial({color:0x444444,metalness:0.5,roughness:0.5});
+            // Main unit box
+            const box=new THREE.Mesh(new THREE.BoxGeometry(size*0.85,size*0.4,size*0.55),unitMat);
+            box.position.y=size*0.2; box.castShadow=true; mesh.add(box);
+            // Top louvre panel
+            const louvre=new THREE.Mesh(new THREE.BoxGeometry(size*0.87,size*0.04,size*0.57),grillMat);
+            louvre.position.y=size*0.42; mesh.add(louvre);
+            // Front grill slats
+            for(let i=0;i<5;i++){
+                const slat=new THREE.Mesh(new THREE.BoxGeometry(size*0.72,size*0.025,size*0.03),grillMat);
+                slat.position.set(0,size*0.1+i*size*0.06,size*0.28); mesh.add(slat);
+            }
+            // Fan disc (front)
+            const fanDisc=new THREE.Mesh(new THREE.CylinderGeometry(size*0.16,size*0.16,size*0.025,16),grillMat);
+            fanDisc.rotation.x=Math.PI/2; fanDisc.position.set(0,size*0.2,size*0.28); mesh.add(fanDisc);
+            // Fan blades
+            for(let b=0;b<4;b++){
+                const blade=new THREE.Mesh(new THREE.BoxGeometry(size*0.12,size*0.02,size*0.04),fanMat);
+                blade.rotation.z=b*Math.PI/2; blade.position.set(Math.cos(b*Math.PI/2)*size*0.08,size*0.2,size*0.295);
+                mesh.add(blade);
+            }
+            // Pipe stub
+            const pipe=new THREE.Mesh(new THREE.CylinderGeometry(size*0.04,size*0.04,size*0.12,8),unitMat);
+            pipe.position.set(size*0.28,size*0.46,size*0.1); mesh.add(pipe);
+            break;
+        }
+        case 'bleacher': {
+            mesh=makeGroup();
+            const seatMat=new THREE.MeshStandardMaterial({color:c,roughness:0.7,metalness:0.1});
+            const frameMat=new THREE.MeshStandardMaterial({color:0x555555,metalness:0.7,roughness:0.35});
+            // 4 tiered rows of seats
+            for(let row=0;row<4;row++){
+                const riseY=row*size*0.22, riseZ=-row*size*0.28;
+                // Seat plank
+                const seat=new THREE.Mesh(new THREE.BoxGeometry(size*1.1,size*0.055,size*0.3),seatMat);
+                seat.position.set(0,riseY+size*0.24,riseZ); seat.castShadow=true; mesh.add(seat);
+                // Step riser
+                const riser=new THREE.Mesh(new THREE.BoxGeometry(size*1.1,size*0.2,size*0.04),frameMat);
+                riser.position.set(0,riseY+size*0.1,riseZ+size*0.15); mesh.add(riser);
+            }
+            // Under-frame diagonal supports
+            for(let s of[-0.45,0.45]){
+                const diag=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.04,size*1.0),frameMat);
+                diag.rotation.x=Math.PI*0.22;
+                diag.position.set(s*size,size*0.4,-size*0.2); mesh.add(diag);
+            }
+            // Vertical uprights
+            for(let s of[-0.45,0.45]){
+                const up=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.88,size*0.04),frameMat);
+                up.position.set(s*size,size*0.44,-size*0.42); mesh.add(up);
+            }
+            break;
+        }
+
         default:
             geo=new THREE.BoxGeometry(size,size,size);
             mat=new THREE.MeshStandardMaterial({color:c,roughness:0.7});
@@ -2346,7 +2752,7 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         };
 
         // Textures
-        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete' };
+        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete',canopy:'metal',fuel_pump:'metal',sign:'metal',flagpole:'metal',bollard:'metal',hvac:'metal',bench:'wood',bleacher:'metal' };
         if (BLOCK_TEX_MAP[blockType]) {
             const tex = getCachedTexture(BLOCK_TEX_MAP[blockType]);
             mesh.traverse(child => { if (child.isMesh && child.material) { child.material.map = tex; child.material.needsUpdate = true; } });
@@ -2533,7 +2939,7 @@ function animate() {
 
 // ==================== UI FUNCTIONS ====================
 function switchTab(tab, e) {
-    const eventTarget = e ? e.currentTarget : event.target;
+    const eventTarget = e ? e.currentTarget : (typeof event !== 'undefined' ? event.target : null);
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.panel-section').forEach(p => { p.classList.remove('active'); p.style.opacity='0'; p.style.transform='translateY(8px)'; });
     eventTarget.classList.add('active');
@@ -2561,7 +2967,7 @@ function pickBlock(type, el) {
 function setSize(s) {
     currentSize = s;
     document.querySelectorAll('[id^="size-"]').forEach(b => b.classList.remove('active'));
-    const activeBtn = document.getElementById('size-' + (s.toString().replace('.', '')));
+    const activeBtn = document.getElementById('size-' + s.toString().replace(/\./g, ''));
     if (activeBtn) activeBtn.classList.add('active');
     updateGhostGeo();
     toast('Size: ' + s + 'x', 'success');
@@ -2589,6 +2995,14 @@ function setPlatform(type) {
 function setGround(matType) {
     const type = ground && ground.userData ? ground.userData.type : 'flat';
     createGround(type, matType);
+    // Tint the grid to complement the ground surface
+    const gridTints = { grass:0x2a5a2a, dirt:0x5a2a0a, stone:0x444444, rock:0x404040, sand:0x8a6a20, snow:0x8888cc, tan:0x887755 };
+    const tint = gridTints[matType] || 0x887755;
+    if (grid) { grid.material.color.setHex(tint); }
+    // Highlight the active ground button
+    document.querySelectorAll('.ground-mat-btn').forEach(b => b.classList.remove('selected'));
+    const activeBtn = document.querySelector(`.ground-mat-btn[data-mat="${matType}"]`);
+    if (activeBtn) activeBtn.classList.add('selected');
     toast('Ground: ' + matType);
 }
 
@@ -2597,7 +3011,7 @@ function toggleGrid() {
     grid.visible = showGrid;
     const btn = document.getElementById('grid-btn');
     btn.classList.toggle('active');
-    if (showGrid && grid) { grid.material.opacity = 0.8; setTimeout(() => { grid.material.opacity = 0.4; }, 300); }
+    if (showGrid && grid) { grid.material.opacity = 0.8; clearTimeout(grid._opacityTimer); grid._opacityTimer = setTimeout(() => { grid.material.opacity = 0.4; }, 300); }
     toast(showGrid ? 'Grid: ON' : 'Grid: OFF');
 }
 
@@ -2718,10 +3132,11 @@ function doLoad() { const name = document.getElementById('save-name-input').valu
 
 // ==================== SCREENSHOT ====================
 function takeScreenshot() {
-    document.querySelectorAll('.ui-layer, .toast-container, .mobile-controls, #vignette').forEach(el => { el.dataset.prevDisplay=el.style.display; el.style.display='none'; });
+    const hideSelectors = '.ui-layer, .toast-container, .mobile-controls, #vignette, #templates-modal, #save-modal, #theme-modal, #block-context-menu, .mp-overlay';
+    document.querySelectorAll(hideSelectors).forEach(el => { el.dataset.prevDisplay = getComputedStyle(el).display; el.style.display='none'; });
     renderer.render(scene, camera);
     const dataURL = renderer.domElement.toDataURL('image/png');
-    document.querySelectorAll('.ui-layer, .toast-container, .mobile-controls, #vignette').forEach(el => { el.style.display=el.dataset.prevDisplay||''; });
+    document.querySelectorAll(hideSelectors).forEach(el => { el.style.display = el.dataset.prevDisplay || ''; });
     const a = document.createElement('a'); a.href=dataURL; a.download='brickforge-screenshot.png'; a.click();
     toast('Screenshot saved!', 'info');
 }
@@ -2860,8 +3275,9 @@ function renderFavorites() {
             const btn = document.createElement('div');
             btn.className = 'fav-btn';
             btn.title = type;
-            btn.innerHTML = `<div style="font-size:11px; color:var(--accent);">${type.substring(0,5)}</div>
-                <div class="fav-remove" onclick="removeFavorite(${idx}, event)">×</div>`;
+            const capturedIdx = idx;
+            btn.innerHTML = `<div style="font-size:11px; color:var(--accent);">${type.substring(0,5)}</div><div class="fav-remove">×</div>`;
+            btn.querySelector('.fav-remove').addEventListener('click', (ev) => { ev.stopPropagation(); removeFavorite(capturedIdx, ev); });
             btn.onclick = () => {
                 currentBlock = type;
                 updateGhostGeo();
@@ -2892,127 +3308,270 @@ function removeFavorite(idx, e) {
 // ==================== TEMPLATES ====================
 const TEMPLATES = {
     house: {
-        name: 'Simple House',
-        desc: 'Brick walls, windows, roof & chimney',
+        name: 'Cottage House',
+        desc: 'Foundation, 2 floors, porch, chimney & garden',
         icon: '🏠',
         gradient: 'linear-gradient(135deg, #cc6644, #884422)',
         blocks: [
-            // Walls (4 sides)
-            {type:'brick',position:{x:-2,y:0.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-1,y:0.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:0,y:0.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:1,y:0.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:0.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:0.5,z:2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:0.5,z:2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:0.5,z:-1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:0.5,z:0},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:0.5,z:1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:0.5,z:-1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:0.5,z:0},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:0.5,z:1},rotation:0,color:'#cc6644',size:1},
-            // Second floor
-            {type:'brick',position:{x:-2,y:1.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-1,y:1.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:0,y:1.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:1,y:1.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:1.5,z:-2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:1.5,z:2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:1.5,z:2},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:1.5,z:-1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:1.5,z:0},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:-2,y:1.5,z:1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:1.5,z:-1},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:1.5,z:0},rotation:0,color:'#cc6644',size:1},
-            {type:'brick',position:{x:2,y:1.5,z:1},rotation:0,color:'#cc6644',size:1},
-            // Windows
-            {type:'window',position:{x:-1,y:1.5,z:-2},rotation:0,color:'#87CEEB',size:1},
-            {type:'window',position:{x:1,y:1.5,z:-2},rotation:0,color:'#87CEEB',size:1},
-            // Door
-            {type:'door',position:{x:0,y:0.5,z:2},rotation:Math.PI,color:'#8B4513',size:1},
-            // Roof (flat top)
-            {type:'roof',position:{x:-1,y:2.5,z:0},rotation:0,color:'#8B0000',size:2},
-            {type:'roof',position:{x:1,y:2.5,z:0},rotation:Math.PI,color:'#8B0000',size:2},
-            // Chimney
-            {type:'cube',position:{x:1.5,y:3.5,z:-1},rotation:0,color:'#8B4513',size:0.5},
+            // Stone foundation plinth
+            {type:'stone',position:{x:-2,y:0.1,z:-2},color:'#888888',size:1},{type:'stone',position:{x:-1,y:0.1,z:-2},color:'#888888',size:1},{type:'stone',position:{x:0,y:0.1,z:-2},color:'#888888',size:1},{type:'stone',position:{x:1,y:0.1,z:-2},color:'#888888',size:1},{type:'stone',position:{x:2,y:0.1,z:-2},color:'#888888',size:1},
+            {type:'stone',position:{x:-2,y:0.1,z:2},color:'#888888',size:1},{type:'stone',position:{x:-1,y:0.1,z:2},color:'#888888',size:1},{type:'stone',position:{x:0,y:0.1,z:2},color:'#888888',size:1},{type:'stone',position:{x:1,y:0.1,z:2},color:'#888888',size:1},{type:'stone',position:{x:2,y:0.1,z:2},color:'#888888',size:1},
+            {type:'stone',position:{x:-2,y:0.1,z:-1},color:'#888888',size:1},{type:'stone',position:{x:-2,y:0.1,z:0},color:'#888888',size:1},{type:'stone',position:{x:-2,y:0.1,z:1},color:'#888888',size:1},
+            {type:'stone',position:{x:2,y:0.1,z:-1},color:'#888888',size:1},{type:'stone',position:{x:2,y:0.1,z:0},color:'#888888',size:1},{type:'stone',position:{x:2,y:0.1,z:1},color:'#888888',size:1},
+            // Ground floor brick walls
+            {type:'brick',position:{x:-2,y:1,z:-2},color:'#BB4422',size:1},{type:'brick',position:{x:-1,y:1,z:-2},color:'#AA3311',size:1},{type:'brick',position:{x:0,y:1,z:-2},color:'#CC4433',size:1},{type:'brick',position:{x:1,y:1,z:-2},color:'#AA3311',size:1},{type:'brick',position:{x:2,y:1,z:-2},color:'#BB4422',size:1},
+            {type:'brick',position:{x:-2,y:1,z:2},color:'#BB4422',size:1},{type:'brick',position:{x:2,y:1,z:2},color:'#BB4422',size:1},
+            {type:'brick',position:{x:-2,y:1,z:-1},color:'#AA3311',size:1},{type:'brick',position:{x:-2,y:1,z:0},color:'#BB4422',size:1},{type:'brick',position:{x:-2,y:1,z:1},color:'#AA3311',size:1},
+            {type:'brick',position:{x:2,y:1,z:-1},color:'#AA3311',size:1},{type:'brick',position:{x:2,y:1,z:0},color:'#BB4422',size:1},{type:'brick',position:{x:2,y:1,z:1},color:'#AA3311',size:1},
+            // Ground floor windows (front wall)
+            {type:'window',position:{x:-1,y:0.85,z:-2},color:'#6AB0CC',size:0.8},
+            {type:'window',position:{x:1,y:0.85,z:-2},color:'#6AB0CC',size:0.8},
+            // Door (back wall / front face of house)
+            {type:'door',position:{x:0,y:0.75,z:2},color:'#5c2a0a',size:0.9},
+            // Second floor brick walls
+            {type:'brick',position:{x:-2,y:2,z:-2},color:'#994422',size:1},{type:'brick',position:{x:-1,y:2,z:-2},color:'#AA4422',size:1},{type:'brick',position:{x:0,y:2,z:-2},color:'#BB4433',size:1},{type:'brick',position:{x:1,y:2,z:-2},color:'#AA4422',size:1},{type:'brick',position:{x:2,y:2,z:-2},color:'#994422',size:1},
+            {type:'brick',position:{x:-2,y:2,z:2},color:'#994422',size:1},{type:'brick',position:{x:-1,y:2,z:2},color:'#AA4422',size:1},{type:'brick',position:{x:0,y:2,z:2},color:'#BB4433',size:1},{type:'brick',position:{x:1,y:2,z:2},color:'#AA4422',size:1},{type:'brick',position:{x:2,y:2,z:2},color:'#994422',size:1},
+            {type:'brick',position:{x:-2,y:2,z:-1},color:'#AA4422',size:1},{type:'brick',position:{x:-2,y:2,z:0},color:'#994422',size:1},{type:'brick',position:{x:-2,y:2,z:1},color:'#AA4422',size:1},
+            {type:'brick',position:{x:2,y:2,z:-1},color:'#AA4422',size:1},{type:'brick',position:{x:2,y:2,z:0},color:'#994422',size:1},{type:'brick',position:{x:2,y:2,z:1},color:'#AA4422',size:1},
+            // Second floor windows
+            {type:'window',position:{x:0,y:1.9,z:-2},color:'#6AB0CC',size:0.75},
+            {type:'window',position:{x:0,y:1.9,z:2},color:'#6AB0CC',size:0.75},
+            {type:'window',position:{x:-2,y:1.9,z:0},color:'#6AB0CC',size:0.65},
+            {type:'window',position:{x:2,y:1.9,z:0},color:'#6AB0CC',size:0.65},
+            // Pitched roof
+            {type:'roof',position:{x:-0.8,y:3.0,z:0},color:'#881111',size:2.2},
+            {type:'roof',position:{x:0.8,y:3.0,z:0},color:'#881111',size:2.2},
+            // Chimney stack
+            {type:'brick',position:{x:1.4,y:3.0,z:-1},color:'#AA3322',size:0.4},
+            {type:'brick',position:{x:1.4,y:3.45,z:-1},color:'#BB3322',size:0.4},
+            {type:'stone',position:{x:1.4,y:3.75,z:-1},color:'#777777',size:0.5},
+            // Porch: posts, floor, step
+            {type:'pillar',position:{x:-0.65,y:0.4,z:2.9},color:'#DDDDCC',size:0.38},
+            {type:'pillar',position:{x:0.65,y:0.4,z:2.9},color:'#DDDDCC',size:0.38},
+            {type:'floor',position:{x:0,y:0.04,z:2.8},color:'#9B8060',size:1.4},
+            {type:'stone',position:{x:0,y:0.02,z:3.6},color:'#AAAAAA',size:0.6},
+            // Garden path
+            {type:'stone',position:{x:0,y:0.02,z:4.4},color:'#999999',size:0.55},
+            {type:'stone',position:{x:0,y:0.02,z:5.2},color:'#AAAAAA',size:0.55},
+            // Flanking bushes
+            {type:'bush',position:{x:-2.8,y:0.3,z:1.5},color:'#2d6622',size:0.8},
+            {type:'bush',position:{x:2.8,y:0.3,z:1.5},color:'#336622',size:0.75},
+            {type:'bush',position:{x:-2.8,y:0.3,z:-1.5},color:'#3a6a22',size:0.65},
+            {type:'bush',position:{x:2.8,y:0.3,z:-1.5},color:'#2d6622',size:0.7},
         ]
     },
     tower: {
         name: 'Castle Tower',
-        desc: 'Stone base, turrets & battlements',
+        desc: 'Stone keep with arrow slits, turrets & battlements',
         icon: '🏰',
         gradient: 'linear-gradient(135deg, #666666, #333333)',
         blocks: [
-            {type:'stone',position:{x:0,y:0.5,z:0},rotation:0,color:'#808080',size:2},
-            {type:'stone',position:{x:0,y:1.5,z:0},rotation:0,color:'#808080',size:2},
-            {type:'stone',position:{x:0,y:2.5,z:0},rotation:0,color:'#808080',size:2},
-            {type:'stone',position:{x:0,y:3.5,z:0},rotation:0,color:'#808080',size:2},
-            {type:'stone',position:{x:0,y:4.5,z:0},rotation:0,color:'#808080',size:2},
-            {type:'stone',position:{x:0,y:5.5,z:0},rotation:0,color:'#707070',size:2},
-            // Battlements
-            {type:'cube',position:{x:-1,y:6.5,z:-1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:1,y:6.5,z:-1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:-1,y:6.5,z:1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:1,y:6.5,z:1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:0,y:6.5,z:-1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:0,y:6.5,z:1},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:-1,y:6.5,z:0},rotation:0,color:'#707070',size:0.5},
-            {type:'cube',position:{x:1,y:6.5,z:0},rotation:0,color:'#707070',size:0.5},
-            // Flag
-            {type:'cube',position:{x:0,y:7.5,z:0},rotation:0,color:'#CC0000',size:0.3},
+            // Wide stone base (slightly darker at foot)
+            {type:'stone',position:{x:0,y:0.6,z:0},color:'#696969',size:2.2},
+            {type:'stone',position:{x:0,y:1.7,z:0},color:'#707070',size:2.1},
+            {type:'stone',position:{x:0,y:2.75,z:0},color:'#727272',size:2.0},
+            {type:'stone',position:{x:0,y:3.75,z:0},color:'#747474',size:2.0},
+            {type:'stone',position:{x:0,y:4.75,z:0},color:'#767676',size:2.0},
+            {type:'stone',position:{x:0,y:5.75,z:0},color:'#686868',size:2.0},
+            // Machicolation band just below battlements
+            {type:'stone',position:{x:0,y:6.6,z:0},color:'#606060',size:2.15},
+            // Corner turret bumps (4 corners, alternating heights)
+            {type:'cylinder',position:{x:-1.2,y:3,z:-1.2},color:'#6a6a6a',size:0.55},
+            {type:'cylinder',position:{x:1.2,y:3,z:-1.2},color:'#686868',size:0.55},
+            {type:'cylinder',position:{x:-1.2,y:3,z:1.2},color:'#686868',size:0.55},
+            {type:'cylinder',position:{x:1.2,y:3,z:1.2},color:'#6a6a6a',size:0.55},
+            // Arrow slits (thin windows, front & back)
+            {type:'window',position:{x:0,y:2.5,z:-1.06},color:'#222222',size:0.3},
+            {type:'window',position:{x:0,y:4.5,z:-1.06},color:'#222222',size:0.3},
+            {type:'window',position:{x:0,y:2.5,z:1.06},color:'#222222',size:0.3},
+            {type:'window',position:{x:0,y:4.5,z:1.06},color:'#222222',size:0.3},
+            // Arrow slits (left & right sides)
+            {type:'window',position:{x:-1.06,y:3.5,z:0},color:'#222222',size:0.3},
+            {type:'window',position:{x:1.06,y:3.5,z:0},color:'#222222',size:0.3},
+            // Entrance arch at base
+            {type:'arch',position:{x:0,y:0.9,z:1.1},color:'#555555',size:1.2},
+            {type:'door',position:{x:0,y:0.6,z:1.08},color:'#3a2010',size:0.7},
+            // Battlements — merlons (solid) and crenels (gaps) alternating
+            {type:'cube',position:{x:-0.9,y:7.4,z:-0.9},color:'#656565',size:0.48},{type:'cube',position:{x:0,y:7.4,z:-0.9},color:'#636363',size:0.48},{type:'cube',position:{x:0.9,y:7.4,z:-0.9},color:'#656565',size:0.48},
+            {type:'cube',position:{x:-0.9,y:7.4,z:0.9},color:'#656565',size:0.48},{type:'cube',position:{x:0,y:7.4,z:0.9},color:'#636363',size:0.48},{type:'cube',position:{x:0.9,y:7.4,z:0.9},color:'#656565',size:0.48},
+            {type:'cube',position:{x:-0.9,y:7.4,z:0},color:'#636363',size:0.48},{type:'cube',position:{x:0.9,y:7.4,z:0},color:'#636363',size:0.48},
+            // Corner merlon caps
+            {type:'cube',position:{x:-1.1,y:7.4,z:-1.1},color:'#606060',size:0.42},{type:'cube',position:{x:1.1,y:7.4,z:-1.1},color:'#606060',size:0.42},
+            {type:'cube',position:{x:-1.1,y:7.4,z:1.1},color:'#606060',size:0.42},{type:'cube',position:{x:1.1,y:7.4,z:1.1},color:'#606060',size:0.42},
+            // Flag pole & flag
+            {type:'cylinder',position:{x:0,y:8.3,z:0},color:'#888888',size:0.12},
+            {type:'cube',position:{x:0.25,y:8.75,z:0},color:'#CC0000',size:0.28},
         ]
     },
     bridge: {
-        name: 'Bridge',
-        desc: 'Two pillars, arch span & railings',
+        name: 'Stone Bridge',
+        desc: 'Three arched spans, piers, deck & parapets',
         icon: '🌉',
         gradient: 'linear-gradient(135deg, #6699bb, #334455)',
         blocks: [
-            // Pillars
-            {type:'pillar',position:{x:-4,y:1,z:0},rotation:0,color:'#808080',size:1},
-            {type:'pillar',position:{x:4,y:1,z:0},rotation:0,color:'#808080',size:1},
-            // Deck
-            {type:'floor',position:{x:-3,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:-2,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:-1,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:0,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:1,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:2,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'floor',position:{x:3,y:2,z:0},rotation:0,color:'#8B4513',size:1},
-            // Railings
-            {type:'fence',position:{x:-2,y:2.5,z:-0.5},rotation:0,color:'#AAAAAA',size:1},
-            {type:'fence',position:{x:0,y:2.5,z:-0.5},rotation:0,color:'#AAAAAA',size:1},
-            {type:'fence',position:{x:2,y:2.5,z:-0.5},rotation:0,color:'#AAAAAA',size:1},
-            {type:'fence',position:{x:-2,y:2.5,z:0.5},rotation:0,color:'#AAAAAA',size:1},
-            {type:'fence',position:{x:0,y:2.5,z:0.5},rotation:0,color:'#AAAAAA',size:1},
-            {type:'fence',position:{x:2,y:2.5,z:0.5},rotation:0,color:'#AAAAAA',size:1},
-            // Arch
-            {type:'arch',position:{x:0,y:1.2,z:0},rotation:Math.PI/2,color:'#808080',size:2},
+            // Three stone piers
+            {type:'stone',position:{x:-4.5,y:0.5,z:0},color:'#888888',size:1.1},{type:'stone',position:{x:-4.5,y:1.4,z:0},color:'#808080',size:1.0},
+            {type:'stone',position:{x:0,y:0.5,z:0},color:'#888888',size:1.1},{type:'stone',position:{x:0,y:1.4,z:0},color:'#808080',size:1.0},
+            {type:'stone',position:{x:4.5,y:0.5,z:0},color:'#888888',size:1.1},{type:'stone',position:{x:4.5,y:1.4,z:0},color:'#808080',size:1.0},
+            // Three arches spanning between piers
+            {type:'arch',position:{x:-2.25,y:1.4,z:0},color:'#7a7a7a',size:2.2},
+            {type:'arch',position:{x:2.25,y:1.4,z:0},color:'#7a7a7a',size:2.2},
+            // Spandrel fill above arches
+            {type:'stone',position:{x:-2.25,y:2.2,z:0},color:'#909090',size:0.9},
+            {type:'stone',position:{x:2.25,y:2.2,z:0},color:'#909090',size:0.9},
+            // Stone deck (9 slabs)
+            {type:'floor',position:{x:-4,y:2.5,z:0},color:'#999999',size:1},{type:'floor',position:{x:-3,y:2.5,z:0},color:'#aaaaaa',size:1},{type:'floor',position:{x:-2,y:2.5,z:0},color:'#999999',size:1},
+            {type:'floor',position:{x:-1,y:2.5,z:0},color:'#aaaaaa',size:1},{type:'floor',position:{x:0,y:2.5,z:0},color:'#999999',size:1},{type:'floor',position:{x:1,y:2.5,z:0},color:'#aaaaaa',size:1},
+            {type:'floor',position:{x:2,y:2.5,z:0},color:'#999999',size:1},{type:'floor',position:{x:3,y:2.5,z:0},color:'#aaaaaa',size:1},{type:'floor',position:{x:4,y:2.5,z:0},color:'#999999',size:1},
+            // Parapets — both sides (stone slabs on edge)
+            {type:'stone',position:{x:-3.5,y:3.0,z:-0.6},color:'#868686',size:0.7},{type:'stone',position:{x:-1.5,y:3.0,z:-0.6},color:'#868686',size:0.7},{type:'stone',position:{x:0.5,y:3.0,z:-0.6},color:'#868686',size:0.7},{type:'stone',position:{x:2.5,y:3.0,z:-0.6},color:'#868686',size:0.7},
+            {type:'stone',position:{x:-3.5,y:3.0,z:0.6},color:'#868686',size:0.7},{type:'stone',position:{x:-1.5,y:3.0,z:0.6},color:'#868686',size:0.7},{type:'stone',position:{x:0.5,y:3.0,z:0.6},color:'#868686',size:0.7},{type:'stone',position:{x:2.5,y:3.0,z:0.6},color:'#868686',size:0.7},
+            // Decorative end posts (pillars)
+            {type:'pillar',position:{x:-5.3,y:2.2,z:-0.6},color:'#909090',size:0.55},{type:'pillar',position:{x:-5.3,y:2.2,z:0.6},color:'#909090',size:0.55},
+            {type:'pillar',position:{x:5.3,y:2.2,z:-0.6},color:'#909090',size:0.55},{type:'pillar',position:{x:5.3,y:2.2,z:0.6},color:'#909090',size:0.55},
+            // Approach ramps
+            {type:'ramp',position:{x:-5.8,y:2.4,z:0},color:'#999999',size:1.1},
+            {type:'ramp',position:{x:5.8,y:2.4,z:0},color:'#999999',size:1.1},
         ]
     },
     treehouse: {
         name: 'Tree House',
-        desc: 'Large tree with platform & small room',
+        desc: 'Tall oak, plank deck, cabin room & rope ladder',
         icon: '🌲',
         gradient: 'linear-gradient(135deg, #228B22, #1a4a1a)',
         blocks: [
-            // Tree trunk
-            {type:'log',position:{x:0,y:0.5,z:0},rotation:0,color:'#5c3a1a',size:1},
-            {type:'log',position:{x:0,y:1.5,z:0},rotation:0,color:'#5c3a1a',size:1},
-            {type:'log',position:{x:0,y:2.5,z:0},rotation:0,color:'#5c3a1a',size:1},
-            {type:'log',position:{x:0,y:3.5,z:0},rotation:0,color:'#5c3a1a',size:1},
-            // Platform
-            {type:'platform',position:{x:0,y:4,z:0},rotation:0,color:'#8B4513',size:2},
-            // Leaves around trunk
-            {type:'tree',position:{x:0,y:3,z:0},rotation:0,color:'#228B22',size:2},
-            // Small room on platform
-            {type:'wall',position:{x:-1,y:5,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'wall',position:{x:1,y:5,z:0},rotation:0,color:'#8B4513',size:1},
-            {type:'wall',position:{x:0,y:5,z:-1},rotation:Math.PI/2,color:'#8B4513',size:1},
-            {type:'window',position:{x:0,y:5,z:-1},rotation:0,color:'#87CEEB',size:0.5},
-            {type:'roof',position:{x:0,y:6.2,z:0},rotation:0,color:'#5c3a1a',size:1},
-            // Ladder
-            {type:'ladder',position:{x:0,y:2,z:1},rotation:0,color:'#DEB887',size:1},
+            // Thick trunk (5 logs tall)
+            {type:'log',position:{x:0,y:0.6,z:0},color:'#4a2e14',size:1.2},{type:'log',position:{x:0,y:1.8,z:0},color:'#4a2e14',size:1.1},{type:'log',position:{x:0,y:2.9,z:0},color:'#52321a',size:1.0},{type:'log',position:{x:0,y:3.9,z:0},color:'#52321a',size:0.9},{type:'log',position:{x:0,y:4.8,z:0},color:'#5c3a1a',size:0.85},
+            // Exposed roots
+            {type:'log',position:{x:0.7,y:0.2,z:0.5},color:'#3a2010',size:0.4},{type:'log',position:{x:-0.7,y:0.2,z:-0.4},color:'#3a2010',size:0.4},{type:'log',position:{x:0.4,y:0.2,z:-0.7},color:'#3a2010',size:0.38},
+            // Canopy layers (tree blocks at different heights)
+            {type:'tree',position:{x:0,y:3.5,z:0},color:'#1a6a18',size:2.8},
+            {type:'bush',position:{x:1.2,y:5.5,z:0.8},color:'#256622',size:1.0},{type:'bush',position:{x:-1.0,y:5.5,z:-1.0},color:'#2a7020',size:0.9},{type:'bush',position:{x:0.5,y:6.2,z:-1.2},color:'#1e5e1c',size:0.8},
+            // Deck platform (plank tiles)
+            {type:'plank',position:{x:-1,y:5.25,z:-1},color:'#7a5530',size:1},{type:'plank',position:{x:0,y:5.25,z:-1},color:'#8B6040',size:1},{type:'plank',position:{x:1,y:5.25,z:-1},color:'#7a5530',size:1},
+            {type:'plank',position:{x:-1,y:5.25,z:0},color:'#8B6040',size:1},{type:'plank',position:{x:0,y:5.25,z:0},color:'#7a5530',size:1},{type:'plank',position:{x:1,y:5.25,z:0},color:'#8B6040',size:1},
+            {type:'plank',position:{x:-1,y:5.25,z:1},color:'#7a5530',size:1},{type:'plank',position:{x:0,y:5.25,z:1},color:'#8B6040',size:1},{type:'plank',position:{x:1,y:5.25,z:1},color:'#7a5530',size:1},
+            // Deck railings (3 sides, leave front open for ladder)
+            {type:'fence',position:{x:-1.5,y:5.8,z:0},color:'#9B7040',size:0.9},{type:'fence',position:{x:1.5,y:5.8,z:0},color:'#9B7040',size:0.9},
+            {type:'fence',position:{x:0,y:5.8,z:-1.5},color:'#9B7040',size:0.9},
+            // Cabin walls (3 sides + window front)
+            {type:'wall',position:{x:-1,y:6.6,z:-0.5},color:'#7a4820',size:0.85},
+            {type:'wall',position:{x:1,y:6.6,z:-0.5},color:'#7a4820',size:0.85},
+            {type:'wall',position:{x:0,y:6.6,z:-1.1},color:'#7a4820',size:0.85},
+            {type:'window',position:{x:0,y:6.55,z:-1.12},color:'#87CEEB',size:0.45},
+            {type:'wall',position:{x:0,y:6.6,z:0.5},color:'#7a4820',size:0.85},
+            // Cabin roof
+            {type:'roof',position:{x:0,y:7.6,z:0},color:'#3a1a08',size:1.2},
+            // Rope ladder (3 sections)
+            {type:'ladder',position:{x:0,y:3.4,z:1.6},color:'#C8A060',size:0.9},
+            {type:'ladder',position:{x:0,y:4.3,z:1.5},color:'#BFA055',size:0.9},
+            // Hanging lantern
+            {type:'glow',position:{x:0.9,y:5.6,z:0.9},color:'#ffcc44',size:0.18},
+        ]
+    },
+
+    school: {
+        name: 'Elementary School',
+        desc: '2-story concrete building, gym wing, flagpole, bleachers & grounds',
+        icon: '🏫',
+        gradient: 'linear-gradient(135deg, #1565C0, #0D47A1)',
+        blocks: [
+            // Concrete slab foundation
+            {type:'concrete',position:{x:-4,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-3,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-2,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-1,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:0,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:1,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:2,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:3,y:0.05,z:-3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:4,y:0.05,z:-3},color:'#aaaaaa',size:1},
+            {type:'concrete',position:{x:-4,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-3,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-2,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-1,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:0,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:1,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:2,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:3,y:0.05,z:3},color:'#aaaaaa',size:1},{type:'concrete',position:{x:4,y:0.05,z:3},color:'#aaaaaa',size:1},
+            // Ground floor concrete walls (front)
+            {type:'concrete',position:{x:-4,y:1,z:-3},color:'#c0c8d0',size:1},{type:'concrete',position:{x:-3,y:1,z:-3},color:'#c0c8d0',size:1},{type:'concrete',position:{x:-2,y:1,z:-3},color:'#c0c8d0',size:1},{type:'concrete',position:{x:2,y:1,z:-3},color:'#c0c8d0',size:1},{type:'concrete',position:{x:3,y:1,z:-3},color:'#c0c8d0',size:1},{type:'concrete',position:{x:4,y:1,z:-3},color:'#c0c8d0',size:1},
+            // Ground floor windows front
+            {type:'window',position:{x:-3.2,y:0.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:-1.2,y:0.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:1.2,y:0.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:3.2,y:0.9,z:-3},color:'#5b9bd5',size:0.85},
+            // Ground floor side walls
+            {type:'concrete',position:{x:-4,y:1,z:-2},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-4,y:1,z:-1},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-4,y:1,z:0},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-4,y:1,z:1},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-4,y:1,z:2},color:'#b8c0c8',size:1},
+            {type:'concrete',position:{x:4,y:1,z:-2},color:'#b8c0c8',size:1},{type:'concrete',position:{x:4,y:1,z:-1},color:'#b8c0c8',size:1},{type:'concrete',position:{x:4,y:1,z:0},color:'#b8c0c8',size:1},{type:'concrete',position:{x:4,y:1,z:1},color:'#b8c0c8',size:1},{type:'concrete',position:{x:4,y:1,z:2},color:'#b8c0c8',size:1},
+            // Ground floor back wall
+            {type:'concrete',position:{x:-4,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-3,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-2,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:-1,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:0,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:1,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:2,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:3,y:1,z:3},color:'#b8c0c8',size:1},{type:'concrete',position:{x:4,y:1,z:3},color:'#b8c0c8',size:1},
+            // Entrance canopy over front door + pillars
+            {type:'pillar',position:{x:-1,y:0.5,z:-3.8},color:'#dddddd',size:0.7},{type:'pillar',position:{x:1,y:0.5,z:-3.8},color:'#dddddd',size:0.7},
+            {type:'canopy',position:{x:0,y:1.5,z:-3.6},color:'#2255aa',size:0.8},
+            // Front door (double)
+            {type:'door',position:{x:-0.35,y:0.7,z:-3},color:'#1a3a6a',size:0.7},{type:'door',position:{x:0.35,y:0.7,z:-3},color:'#1a3a6a',size:0.7},
+            // Entry steps
+            {type:'concrete',position:{x:0,y:0.25,z:-3.5},color:'#999999',size:0.9},{type:'concrete',position:{x:-0.5,y:0.25,z:-3.5},color:'#999999',size:0.9},{type:'concrete',position:{x:0.5,y:0.25,z:-3.5},color:'#999999',size:0.9},
+            // Second floor front wall
+            {type:'concrete',position:{x:-4,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:-3,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:-2,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:-1,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:0,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:1,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:2,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:3,y:2,z:-3},color:'#c8d0d8',size:1},{type:'concrete',position:{x:4,y:2,z:-3},color:'#c8d0d8',size:1},
+            // Second floor windows front
+            {type:'window',position:{x:-3.2,y:1.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:-1.2,y:1.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:0,y:1.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:1.2,y:1.9,z:-3},color:'#5b9bd5',size:0.85},{type:'window',position:{x:3.2,y:1.9,z:-3},color:'#5b9bd5',size:0.85},
+            // Flat roof parapet
+            {type:'concrete',position:{x:-4,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:-3,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:-2,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:-1,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:0,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:1,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:2,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:3,y:3,z:-3},color:'#aab0b8',size:0.5},{type:'concrete',position:{x:4,y:3,z:-3},color:'#aab0b8',size:0.5},
+            // Gym wing (right side, lower single-story block)
+            {type:'concrete',position:{x:6,y:0.05,z:-1},color:'#aaaaaa',size:1},{type:'concrete',position:{x:6,y:0.05,z:0},color:'#aaaaaa',size:1},{type:'concrete',position:{x:6,y:0.05,z:1},color:'#aaaaaa',size:1},
+            {type:'concrete',position:{x:5,y:1,z:-2},color:'#b0b8c0',size:1},{type:'concrete',position:{x:6,y:1,z:-2},color:'#b0b8c0',size:1},{type:'concrete',position:{x:7,y:1,z:-2},color:'#b0b8c0',size:1},
+            {type:'concrete',position:{x:5,y:1,z:2},color:'#b0b8c0',size:1},{type:'concrete',position:{x:6,y:1,z:2},color:'#b0b8c0',size:1},{type:'concrete',position:{x:7,y:1,z:2},color:'#b0b8c0',size:1},
+            {type:'concrete',position:{x:7,y:1,z:-1},color:'#b0b8c0',size:1},{type:'concrete',position:{x:7,y:1,z:0},color:'#b0b8c0',size:1},{type:'concrete',position:{x:7,y:1,z:1},color:'#b0b8c0',size:1},
+            {type:'window',position:{x:7,y:1,z:-0.5},color:'#5b9bd5',size:0.85},{type:'window',position:{x:7,y:1,z:0.5},color:'#5b9bd5',size:0.85},
+            {type:'concrete',position:{x:5,y:1.5,z:-2},color:'#9aa0a8',size:0.5},{type:'concrete',position:{x:6,y:1.5,z:-2},color:'#9aa0a8',size:0.5},{type:'concrete',position:{x:7,y:1.5,z:-2},color:'#9aa0a8',size:0.5},
+            {type:'concrete',position:{x:5,y:1.5,z:2},color:'#9aa0a8',size:0.5},{type:'concrete',position:{x:6,y:1.5,z:2},color:'#9aa0a8',size:0.5},{type:'concrete',position:{x:7,y:1.5,z:2},color:'#9aa0a8',size:0.5},
+            // HVAC units on main roof
+            {type:'hvac',position:{x:-2,y:2.6,z:0},color:'#888888',size:0.8},{type:'hvac',position:{x:1,y:2.6,z:0},color:'#888888',size:0.8},
+            // Flagpole (front left of building)
+            {type:'flagpole',position:{x:-5,y:0,z:-4},color:'#cc1111',size:1},
+            // Bleachers (sports area, right side)
+            {type:'bleacher',position:{x:5,y:0,z:5},color:'#1565C0',size:1},{type:'bleacher',position:{x:7,y:0,z:5},color:'#1565C0',size:1},
+            // Benches near entrance
+            {type:'bench',position:{x:-3,y:0,z:-4.5},color:'#7a5a30',size:0.9},{type:'bench',position:{x:3,y:0,z:-4.5},color:'#7a5a30',size:0.9},
+            // Bollards at entry drive
+            {type:'bollard',position:{x:-1.8,y:0,z:-4.8},color:'#cc2222',size:0.8},{type:'bollard',position:{x:-0.9,y:0,z:-4.8},color:'#cc2222',size:0.8},{type:'bollard',position:{x:0,y:0,z:-4.8},color:'#cc2222',size:0.8},{type:'bollard',position:{x:0.9,y:0,z:-4.8},color:'#cc2222',size:0.8},{type:'bollard',position:{x:1.8,y:0,z:-4.8},color:'#cc2222',size:0.8},
+            // Bushes landscaping
+            {type:'bush',position:{x:-5,y:0,z:-2.5},color:'#2a6a20',size:0.9},{type:'bush',position:{x:-5,y:0,z:-1},color:'#246618',size:0.8},{type:'bush',position:{x:5,y:0,z:-2.5},color:'#2a6a20',size:0.9},{type:'bush',position:{x:5,y:0,z:-1},color:'#246618',size:0.8},
+            // School sign on front wall
+            {type:'sign',position:{x:0,y:2.2,z:-3.08},color:'#ffd700',size:0.7},
+        ]
+    },
+
+    gasstation: {
+        name: 'Gas Station',
+        desc: 'Convenience store, pump canopy, 4 fuel pumps, signage & bollards',
+        icon: '⛽',
+        gradient: 'linear-gradient(135deg, #e65100, #bf360c)',
+        blocks: [
+            // Convenience store concrete slab
+            {type:'concrete',position:{x:-3,y:0.05,z:-2},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-2,y:0.05,z:-2},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-1,y:0.05,z:-2},color:'#aaaaaa',size:1},{type:'concrete',position:{x:0,y:0.05,z:-2},color:'#aaaaaa',size:1},{type:'concrete',position:{x:1,y:0.05,z:-2},color:'#aaaaaa',size:1},
+            {type:'concrete',position:{x:-3,y:0.05,z:1},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-2,y:0.05,z:1},color:'#aaaaaa',size:1},{type:'concrete',position:{x:-1,y:0.05,z:1},color:'#aaaaaa',size:1},{type:'concrete',position:{x:0,y:0.05,z:1},color:'#aaaaaa',size:1},{type:'concrete',position:{x:1,y:0.05,z:1},color:'#aaaaaa',size:1},
+            // Store walls
+            {type:'concrete',position:{x:-3,y:1,z:-2},color:'#d8d0c0',size:1},{type:'concrete',position:{x:-2,y:1,z:-2},color:'#d8d0c0',size:1},{type:'concrete',position:{x:2,y:1,z:-2},color:'#d8d0c0',size:1},
+            {type:'concrete',position:{x:-3,y:1,z:-1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:-3,y:1,z:0},color:'#d0c8b8',size:1},{type:'concrete',position:{x:-3,y:1,z:1},color:'#d0c8b8',size:1},
+            {type:'concrete',position:{x:2,y:1,z:-1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:2,y:1,z:0},color:'#d0c8b8',size:1},{type:'concrete',position:{x:2,y:1,z:1},color:'#d0c8b8',size:1},
+            {type:'concrete',position:{x:-3,y:1,z:1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:-2,y:1,z:1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:-1,y:1,z:1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:0,y:1,z:1},color:'#d0c8b8',size:1},{type:'concrete',position:{x:1,y:1,z:1},color:'#d0c8b8',size:1},
+            // Large windows (front glass wall)
+            {type:'glass',position:{x:-1,y:0.95,z:-2},color:'#a0d0f0',size:0.95},{type:'glass',position:{x:0,y:0.95,z:-2},color:'#a0d0f0',size:0.95},{type:'glass',position:{x:1,y:0.95,z:-2},color:'#a0d0f0',size:0.95},
+            // Store door
+            {type:'door',position:{x:-2,y:0.75,z:-2},color:'#3a3a3a',size:0.8},
+            // Flat roof with parapet + brand color band
+            {type:'concrete',position:{x:-3,y:2,z:-2},color:'#cc2200',size:0.5},{type:'concrete',position:{x:-2,y:2,z:-2},color:'#cc2200',size:0.5},{type:'concrete',position:{x:-1,y:2,z:-2},color:'#cc2200',size:0.5},{type:'concrete',position:{x:0,y:2,z:-2},color:'#cc2200',size:0.5},{type:'concrete',position:{x:1,y:2,z:-2},color:'#cc2200',size:0.5},{type:'concrete',position:{x:2,y:2,z:-2},color:'#cc2200',size:0.5},
+            {type:'concrete',position:{x:-3,y:2,z:1},color:'#cc2200',size:0.5},{type:'concrete',position:{x:2,y:2,z:1},color:'#cc2200',size:0.5},
+            // Price sign tower (left side)
+            {type:'sign',position:{x:-5,y:0,z:-2},color:'#cc2200',size:1.2},
+            // Pump canopy (large overhead cover)
+            {type:'canopy',position:{x:3,y:1.4,z:-0.5},color:'#cc2200',size:1.4},
+            {type:'canopy',position:{x:6,y:1.4,z:-0.5},color:'#cc2200',size:1.4},
+            // Canopy support columns
+            {type:'pillar',position:{x:2,y:0.6,z:-1.2},color:'#888888',size:0.5},{type:'pillar',position:{x:2,y:0.6,z:0.2},color:'#888888',size:0.5},
+            {type:'pillar',position:{x:4.5,y:0.6,z:-1.2},color:'#888888',size:0.5},{type:'pillar',position:{x:4.5,y:0.6,z:0.2},color:'#888888',size:0.5},
+            {type:'pillar',position:{x:7,y:0.6,z:-1.2},color:'#888888',size:0.5},{type:'pillar',position:{x:7,y:0.6,z:0.2},color:'#888888',size:0.5},
+            // 4 fuel pumps (two islands)
+            {type:'fuel_pump',position:{x:3,y:0,z:-0.8},color:'#eeeeee',size:0.9},{type:'fuel_pump',position:{x:3,y:0,z:0},color:'#eeeeee',size:0.9},
+            {type:'fuel_pump',position:{x:5.5,y:0,z:-0.8},color:'#eeeeee',size:0.9},{type:'fuel_pump',position:{x:5.5,y:0,z:0},color:'#eeeeee',size:0.9},
+            // Pump island curbs (concrete)
+            {type:'concrete',position:{x:3,y:0.08,z:-0.4},color:'#bbbbbb',size:0.3},{type:'concrete',position:{x:5.5,y:0.08,z:-0.4},color:'#bbbbbb',size:0.3},
+            // Safety bollards around pump islands
+            {type:'bollard',position:{x:2.2,y:0,z:-1.2},color:'#dd2222',size:0.7},{type:'bollard',position:{x:2.2,y:0,z:0.4},color:'#dd2222',size:0.7},
+            {type:'bollard',position:{x:3.8,y:0,z:-1.2},color:'#dd2222',size:0.7},{type:'bollard',position:{x:3.8,y:0,z:0.4},color:'#dd2222',size:0.7},
+            {type:'bollard',position:{x:4.7,y:0,z:-1.2},color:'#dd2222',size:0.7},{type:'bollard',position:{x:4.7,y:0,z:0.4},color:'#dd2222',size:0.7},
+            {type:'bollard',position:{x:6.3,y:0,z:-1.2},color:'#dd2222',size:0.7},{type:'bollard',position:{x:6.3,y:0,z:0.4},color:'#dd2222',size:0.7},
+            // Bollards at store entrance
+            {type:'bollard',position:{x:-2.5,y:0,z:-2.7},color:'#ffcc00',size:0.7},{type:'bollard',position:{x:-1.5,y:0,z:-2.7},color:'#ffcc00',size:0.7},{type:'bollard',position:{x:-0.5,y:0,z:-2.7},color:'#ffcc00',size:0.7},
+            // Trash bin & bench near store
+            {type:'bench',position:{x:1.5,y:0,z:1.8},color:'#667788',size:0.75},
+            // Brand sign on store roof
+            {type:'sign',position:{x:-0.5,y:2.2,z:-2.08},color:'#ffcc00',size:0.7},
         ]
     }
 };
@@ -3149,32 +3708,214 @@ function getCachedTexture(type) {
 }
 
 function createProceduralTexture(type) {
+    const S = 512;
     const canvas = document.createElement('canvas');
-    canvas.width = 256; canvas.height = 256;
+    canvas.width = S; canvas.height = S;
     const ctx = canvas.getContext('2d');
+
+    function rnd(a,b){return a+Math.random()*(b-a);}
+    function noise(x,y,sc){return (Math.sin(x*sc)*Math.cos(y*sc*0.7)+Math.sin(x*sc*1.3+y*sc*0.9))*0.5;}
+
     if (type === 'brick') {
-        ctx.fillStyle='#7a5a4a';ctx.fillRect(0,0,256,256);
-        const bc=['#9a3520','#883018','#aa4030'];
-        for(let row=0;row<10;row++){const off=(row%2)*30;for(let col=-1;col<5;col++){const x=col*60+off,y=row*28;ctx.fillStyle=bc[Math.floor(Math.random()*bc.length)];ctx.fillRect(x+2,y+2,56,24);ctx.fillStyle='rgba(255,255,255,0.12)';ctx.fillRect(x+2,y+2,56,3);}}
+        // Mortar base
+        const mrt = ctx.createLinearGradient(0,0,S,S);
+        mrt.addColorStop(0,'#b0998a'); mrt.addColorStop(1,'#9a8070');
+        ctx.fillStyle=mrt; ctx.fillRect(0,0,S,S);
+        const brickW=62, brickH=26, mortarW=4, mortarH=4;
+        const cols=Math.ceil(S/brickW)+2, rows=Math.ceil(S/brickH)+2;
+        const bColors=['#b0402a','#9a3020','#c05035','#aa3828','#942e1e','#bf4a38'];
+        for(let r=0;r<rows;r++){
+            const off=(r%2)*(brickW/2+mortarW/2);
+            for(let c=-1;c<cols;c++){
+                const x=c*(brickW+mortarW)+off, y=r*(brickH+mortarH);
+                const bc=bColors[Math.floor(rnd(0,bColors.length))];
+                // Base brick color
+                const grd=ctx.createLinearGradient(x,y,x,y+brickH);
+                const lv=rnd(0.9,1.1);
+                grd.addColorStop(0,shiftColor(bc,lv*1.1));
+                grd.addColorStop(0.4,shiftColor(bc,lv));
+                grd.addColorStop(1,shiftColor(bc,lv*0.82));
+                ctx.fillStyle=grd; ctx.fillRect(x,y,brickW,brickH);
+                // Highlight top edge
+                ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.fillRect(x,y,brickW,2);
+                // Weathering specks
+                for(let s=0;s<5;s++){
+                    const sx=x+rnd(2,brickW-2), sy=y+rnd(2,brickH-2);
+                    ctx.fillStyle=`rgba(0,0,0,${rnd(0.05,0.2)})`;
+                    ctx.fillRect(sx,sy,rnd(1,3),rnd(1,2));
+                }
+                // Chip corners occasionally
+                if(Math.random()<0.15){
+                    ctx.fillStyle='rgba(160,130,110,0.7)';
+                    ctx.fillRect(x+rnd(0,4),y+rnd(0,4),rnd(3,7),rnd(2,5));
+                }
+            }
+        }
     } else if (type === 'wood') {
-        ctx.fillStyle='#7a3a10';ctx.fillRect(0,0,256,256);
-        for(let i=0;i<24;i++){const x=(i/24)*256;ctx.strokeStyle=i%4===0?'rgba(40,15,0,0.7)':'rgba(60,25,0,0.4)';ctx.lineWidth=i%4===0?2.5:1.5;ctx.beginPath();ctx.moveTo(x,0);for(let y=0;y<256;y+=2)ctx.lineTo(x+Math.sin(y*0.03+i*0.5)*4,y);ctx.stroke();}
+        // Deep base
+        ctx.fillStyle='#5a2e08'; ctx.fillRect(0,0,S,S);
+        // Annual rings — horizontal grain
+        for(let i=0;i<60;i++){
+            const y=(i/60)*S;
+            const col=i%5===0?`rgba(30,10,0,0.75)`:`rgba(50,20,0,${rnd(0.25,0.5)})`;
+            ctx.strokeStyle=col; ctx.lineWidth=i%5===0?2.5:1.2;
+            ctx.beginPath(); ctx.moveTo(0,y);
+            for(let x=0;x<S;x+=4) ctx.lineTo(x,y+Math.sin(x*0.018+i*0.42)*6+noise(x,y,0.02)*4);
+            ctx.stroke();
+        }
+        // Knots
+        for(let k=0;k<3;k++){
+            const kx=rnd(60,S-60), ky=rnd(60,S-60), kr=rnd(10,20);
+            for(let r=kr;r>1;r-=1.5){
+                ctx.strokeStyle=`rgba(25,8,0,${0.5*(1-r/kr)})`;
+                ctx.lineWidth=1.5;
+                ctx.beginPath(); ctx.ellipse(kx,ky,r*1.6,r,0,0,Math.PI*2); ctx.stroke();
+            }
+        }
+        // Highlight sheen
+        const sheen=ctx.createLinearGradient(0,0,S,0);
+        sheen.addColorStop(0,'rgba(200,130,60,0)');
+        sheen.addColorStop(0.5,'rgba(200,130,60,0.08)');
+        sheen.addColorStop(1,'rgba(200,130,60,0)');
+        ctx.fillStyle=sheen; ctx.fillRect(0,0,S,S);
     } else if (type === 'stone') {
-        ctx.fillStyle='#606060';ctx.fillRect(0,0,256,256);
-        for(let i=0;i<40;i++){const x=Math.random()*256,y=Math.random()*256,rx=15+Math.random()*25,ry=10+Math.random()*18,rot=Math.random()*Math.PI,sh=55+Math.random()*25;ctx.fillStyle=`hsl(0,0%,${sh}%)`;ctx.beginPath();ctx.ellipse(x,y,rx,ry,rot,0,Math.PI*2);ctx.fill();}
+        ctx.fillStyle='#686868'; ctx.fillRect(0,0,S,S);
+        // Ashlar masonry courses
+        const sh=30, sv=46, mT=5;
+        for(let row=0;row<Math.ceil(S/sv)+1;row++){
+            const off=(row%2)*(sh/2+mT/2);
+            for(let col=-1;col<Math.ceil(S/sh)+2;col++){
+                const x=col*(sh+mT)+off, y=row*(sv+mT);
+                const l=rnd(42,68);
+                const grd=ctx.createLinearGradient(x,y,x+sh,y+sv);
+                grd.addColorStop(0,`hsl(0,0%,${l*1.18}%)`);
+                grd.addColorStop(0.5,`hsl(0,3%,${l}%)`);
+                grd.addColorStop(1,`hsl(0,0%,${l*0.8}%)`);
+                ctx.fillStyle=grd; ctx.fillRect(x,y,sh,sv);
+                // Face texture
+                for(let s=0;s<8;s++){
+                    const sl=l+rnd(-8,8);
+                    ctx.fillStyle=`rgba(${sl*2.55|0},${sl*2.55|0},${sl*2.55|0},0.4)`;
+                    ctx.fillRect(x+rnd(1,sh-3),y+rnd(1,sv-3),rnd(2,8),rnd(1,4));
+                }
+                // Mortar shadow
+                ctx.fillStyle='rgba(30,25,20,0.55)';
+                ctx.fillRect(x,y,sh,mT/2); ctx.fillRect(x,y,mT/2,sv);
+            }
+        }
     } else if (type === 'metal') {
-        ctx.fillStyle='#5a6a7a';ctx.fillRect(0,0,256,256);
-        for(let row=0;row<4;row++)for(let col=0;col<4;col++){const px=col*62+3,py=row*62+3,w=56,h=56;const grd=ctx.createLinearGradient(px,py,px+w,py+h);grd.addColorStop(0,'#7a8c9a');grd.addColorStop(0.5,'#5a6a7a');grd.addColorStop(1,'#48586a');ctx.fillStyle=grd;ctx.fillRect(px,py,w,h);ctx.strokeStyle='#8a9caa';ctx.lineWidth=1.5;ctx.strokeRect(px,py,w,h);}
+        // Brushed steel base
+        const bg=ctx.createLinearGradient(0,0,0,S);
+        bg.addColorStop(0,'#7a8c9e'); bg.addColorStop(0.5,'#5e6e7e'); bg.addColorStop(1,'#4a5a6a');
+        ctx.fillStyle=bg; ctx.fillRect(0,0,S,S);
+        // Horizontal brush strokes
+        for(let i=0;i<S;i+=2){
+            if(Math.random()<0.6){
+                const l=rnd(0.85,1.15);
+                ctx.strokeStyle=`rgba(${(180*l)|0},${(200*l)|0},${(220*l)|0},0.35)`;
+                ctx.lineWidth=rnd(0.5,1.5);
+                ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(S,i+rnd(-1,1)); ctx.stroke();
+            }
+        }
+        // Panel seams grid 4×4
+        const pS=S/4;
+        ctx.strokeStyle='rgba(20,30,40,0.7)'; ctx.lineWidth=2.5;
+        for(let i=1;i<4;i++){ ctx.beginPath(); ctx.moveTo(i*pS,0); ctx.lineTo(i*pS,S); ctx.stroke(); }
+        for(let i=1;i<4;i++){ ctx.beginPath(); ctx.moveTo(0,i*pS); ctx.lineTo(S,i*pS); ctx.stroke(); }
+        // Rivets at panel corners
+        for(let r=0;r<=4;r++) for(let c=0;c<=4;c++){
+            const rx=c*pS, ry=r*pS;
+            ctx.beginPath(); ctx.arc(rx,ry,4,0,Math.PI*2);
+            const rg=ctx.createRadialGradient(rx-1,ry-1,0,rx,ry,4);
+            rg.addColorStop(0,'#c0d0e0'); rg.addColorStop(1,'#3a4a5a');
+            ctx.fillStyle=rg; ctx.fill();
+        }
+        // Scratches
+        for(let s=0;s<20;s++){
+            ctx.strokeStyle=`rgba(200,220,240,${rnd(0.1,0.3)})`;
+            ctx.lineWidth=rnd(0.5,1);
+            ctx.beginPath(); const sx=rnd(0,S),sy=rnd(0,S);
+            ctx.moveTo(sx,sy); ctx.lineTo(sx+rnd(-60,60),sy+rnd(-5,5)); ctx.stroke();
+        }
     } else if (type === 'concrete') {
-        const sh=130;ctx.fillStyle=`rgb(${sh},${sh},${sh})`;ctx.fillRect(0,0,256,256);
-        for(let i=0;i<300;i++){const l=95+Math.random()*50;ctx.fillStyle=`rgb(${l},${l},${l})`;ctx.fillRect(Math.random()*256,Math.random()*256,1+Math.random()*3,1+Math.random()*3);}
-        ctx.strokeStyle='rgba(100,100,100,0.4)';ctx.lineWidth=1;
-        for(let i=0;i<256;i+=32){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,256);ctx.stroke();}
-        for(let i=0;i<256;i+=48){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(256,i);ctx.stroke();}
+        const base=145; ctx.fillStyle=`rgb(${base},${base-2},${base-5})`; ctx.fillRect(0,0,S,S);
+        // Aggregate noise
+        for(let i=0;i<1200;i++){
+            const l=rnd(100,175);
+            ctx.fillStyle=`rgba(${l|0},${l|0},${l-5|0},0.55)`;
+            ctx.fillRect(rnd(0,S),rnd(0,S),rnd(1,4),rnd(1,4));
+        }
+        // Form board marks (horizontal)
+        const bH=48;
+        for(let b=0;b<S;b+=bH){
+            ctx.strokeStyle='rgba(100,100,95,0.35)'; ctx.lineWidth=1.5;
+            ctx.beginPath(); ctx.moveTo(0,b); ctx.lineTo(S,b); ctx.stroke();
+            // Faint vertical planks
+            for(let p=0;p<S;p+=40){
+                ctx.strokeStyle='rgba(110,108,100,0.18)'; ctx.lineWidth=1;
+                ctx.beginPath(); ctx.moveTo(p,b); ctx.lineTo(p,b+bH); ctx.stroke();
+            }
+        }
+        // Tie holes
+        for(let r=0;r<S;r+=bH) for(let c=24;c<S;c+=80){
+            const hx=c+rnd(-4,4), hy=r+bH/2+rnd(-3,3);
+            ctx.beginPath(); ctx.arc(hx,hy,4,0,Math.PI*2);
+            ctx.fillStyle='rgba(80,78,74,0.7)'; ctx.fill();
+            ctx.beginPath(); ctx.arc(hx,hy,2,0,Math.PI*2);
+            ctx.fillStyle='rgba(50,48,44,0.9)'; ctx.fill();
+        }
+        // Stain streaks
+        for(let s=0;s<8;s++){
+            const sx=rnd(0,S), sy=rnd(0,S/2);
+            const sg=ctx.createLinearGradient(sx,sy,sx+rnd(-10,10),sy+rnd(40,120));
+            sg.addColorStop(0,'rgba(80,75,65,0.25)'); sg.addColorStop(1,'rgba(80,75,65,0)');
+            ctx.fillStyle=sg; ctx.fillRect(sx-3,sy,6,rnd(40,120));
+        }
+    } else if (type === 'marble') {
+        const mg=ctx.createLinearGradient(0,0,S,S);
+        mg.addColorStop(0,'#f5f0ea'); mg.addColorStop(0.5,'#ede8e0'); mg.addColorStop(1,'#f0ebe2');
+        ctx.fillStyle=mg; ctx.fillRect(0,0,S,S);
+        // Veins
+        for(let v=0;v<12;v++){
+            ctx.strokeStyle=`rgba(${rnd(160,200)|0},${rnd(150,185)|0},${rnd(140,175)|0},${rnd(0.3,0.7)})`;
+            ctx.lineWidth=rnd(0.5,2.5);
+            ctx.beginPath();
+            let vx=rnd(0,S), vy=0; ctx.moveTo(vx,vy);
+            for(let s=0;s<20;s++){ vx+=rnd(-30,30); vy+=S/20; ctx.lineTo(vx,vy); }
+            ctx.stroke();
+        }
+        // Polished sheen
+        const sheen=ctx.createRadialGradient(S*0.4,S*0.35,0,S*0.4,S*0.35,S*0.6);
+        sheen.addColorStop(0,'rgba(255,255,255,0.25)'); sheen.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle=sheen; ctx.fillRect(0,0,S,S);
+    } else if (type === 'glass') {
+        ctx.fillStyle='#a8c8e8'; ctx.fillRect(0,0,S,S);
+        // Tint gradient
+        const tg=ctx.createLinearGradient(0,0,S,S);
+        tg.addColorStop(0,'rgba(160,210,245,0.6)'); tg.addColorStop(1,'rgba(80,130,180,0.4)');
+        ctx.fillStyle=tg; ctx.fillRect(0,0,S,S);
+        // Mullion grid
+        ctx.strokeStyle='rgba(220,240,255,0.7)'; ctx.lineWidth=3;
+        for(let x=0;x<S;x+=128){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,S); ctx.stroke(); }
+        for(let y=0;y<S;y+=128){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(S,y); ctx.stroke(); }
+        // Reflection streak
+        const rg=ctx.createLinearGradient(0,0,S,S);
+        rg.addColorStop(0,'rgba(255,255,255,0)');
+        rg.addColorStop(0.4,'rgba(255,255,255,0.35)');
+        rg.addColorStop(0.45,'rgba(255,255,255,0.05)');
+        rg.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.fillStyle=rg; ctx.fillRect(0,0,S,S);
     }
+
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
     return tex;
+}
+
+function shiftColor(hex, factor) {
+    const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+    const clamp=v=>Math.max(0,Math.min(255,Math.round(v)));
+    return `rgb(${clamp(r*factor)},${clamp(g*factor)},${clamp(b*factor)})`;
 }
 
 // ==================== FIREBASE ====================

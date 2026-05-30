@@ -838,6 +838,9 @@
             <button onclick="toggleGrid()" class="tip-btn active" id="grid-btn" data-tip="Toggle Grid (G)"><i class="fas fa-border-all"></i></button>
             <button onclick="rotateGhost()" class="tip-btn" data-tip="Rotate Block (R)"><i class="fas fa-sync-alt"></i></button>
             <div class="right-panel-divider"></div>
+            <button id="daynight-btn" class="tip-btn" data-tip="Next time of day (N) · Hold for auto-cycle"><i class="fas fa-sun"></i></button>
+            <button onclick="toggleFog()" class="tip-btn" id="fog-btn" data-tip="Toggle Fog"><i class="fas fa-smog"></i></button>
+            <div class="right-panel-divider"></div>
             <button onclick="takeScreenshot(); playSound('screenshot');" class="tip-btn" data-tip="Screenshot (P)"><i class="fas fa-camera"></i></button>
             <button onclick="openThemePicker()" class="tip-btn" data-tip="Change Theme"><i class="fas fa-palette"></i></button>
             <button id="mute-btn" onclick="toggleMute()" class="tip-btn" data-tip="Toggle Sound (M)"><i class="fas fa-volume-up"></i></button>
@@ -1515,6 +1518,7 @@ function init() {
 
     createSkybox();
     setupLighting();
+    createMoon();
     createGround('flat', 'tan');
 
     grid = new THREE.GridHelper(100, 100, 0x998866, 0x887755);
@@ -1864,6 +1868,186 @@ function setupLighting() {
     rimLight = new THREE.DirectionalLight(0xffe0b0, 0.55);
     rimLight.position.set(-50, 30, -50);
     scene.add(rimLight);
+}
+
+// ==================== DAY / NIGHT CYCLE ====================
+const DAY_NIGHT_PRESETS = {
+    dawn:    { sunPos:[40,30,80],  sunColor:0xffbb66, sunInt:1.4, hemiSky:0xffd09a, hemiGnd:0x704030, hemiInt:0.8,  ambColor:0xffe8c0, ambInt:0.3,  skyTop:0x1a2a6a, skyMid:0xff8844, skyBot:0xffcc88, fogColor:0xffc88a, fogDensity:0.010, exposure:1.1,  starVis:false, moonVis:false },
+    day:     { sunPos:[80,140,60], sunColor:0xfff5e0, sunInt:3.2, hemiSky:0x9ad4f5, hemiGnd:0x806040, hemiInt:1.4,  ambColor:0xfff8f0, ambInt:0.55, skyTop:0x3a7fc1, skyMid:0x87CEEB, skyBot:0xd4aa77, fogColor:0xc8e0f0, fogDensity:0.004, exposure:1.25, starVis:false, moonVis:false },
+    golden:  { sunPos:[120,20,60], sunColor:0xff9944, sunInt:2.2, hemiSky:0xffcc88, hemiGnd:0x602010, hemiInt:1.0,  ambColor:0xffddaa, ambInt:0.4,  skyTop:0x1a1a4a, skyMid:0xdd6622, skyBot:0xff8833, fogColor:0xffaa66, fogDensity:0.008, exposure:1.15, starVis:false, moonVis:false },
+    dusk:    { sunPos:[150,8,40],  sunColor:0xff6622, sunInt:1.0, hemiSky:0x441122, hemiGnd:0x220a08, hemiInt:0.5,  ambColor:0xcc5533, ambInt:0.25, skyTop:0x0a0a22, skyMid:0x882200, skyBot:0xff4400, fogColor:0xcc4422, fogDensity:0.012, exposure:1.0,  starVis:true,  moonVis:false },
+    night:   { sunPos:[0,-80,0],   sunColor:0x334466, sunInt:0.0, hemiSky:0x0a0c1a, hemiGnd:0x050812, hemiInt:0.3,  ambColor:0x2233aa, ambInt:0.18, skyTop:0x010208, skyMid:0x0a0c20, skyBot:0x080810, fogColor:0x050810, fogDensity:0.014, exposure:0.55, starVis:true,  moonVis:true  },
+    midnight:{ sunPos:[0,-80,0],   sunColor:0x111122, sunInt:0.0, hemiSky:0x05070f, hemiGnd:0x020305, hemiInt:0.18, ambColor:0x111844, ambInt:0.12, skyTop:0x000103, skyMid:0x050710, skyBot:0x030508, fogColor:0x020308, fogDensity:0.018, exposure:0.4,  starVis:true,  moonVis:true  },
+};
+const DAY_NIGHT_ORDER = ['dawn','day','golden','dusk','night','midnight'];
+let dnCurrentIdx = 1; // start at 'day'
+let dnCycleActive = false;
+let dnCycleSpeed = 0.00008; // radians per frame through 2PI mapped to presets
+let dnCycleT = 0; // 0..1 through the full day
+let dnTransition = null; // { from, to, t, duration }
+let moonMesh = null;
+
+function applyDayNightPreset(preset, instant) {
+    const p = DAY_NIGHT_PRESETS[preset];
+    if (!p) return;
+    if (instant) {
+        _applyDNImmediate(p);
+    } else {
+        const current = _currentDNSnapshot();
+        dnTransition = { from: current, to: p, t: 0, duration: 2200 };
+    }
+    // Icon update
+    const icons = { dawn:'fa-cloud-sun', day:'fa-sun', golden:'fa-sun', dusk:'fa-cloud-moon', night:'fa-moon', midnight:'fa-star' };
+    const btn = document.getElementById('daynight-btn');
+    if (btn) btn.innerHTML = `<i class="fas ${icons[preset] || 'fa-sun'}"></i>`;
+}
+
+function _applyDNImmediate(p) {
+    sunLight.position.set(...p.sunPos);
+    sunLight.color.setHex(p.sunColor);
+    sunLight.intensity = p.sunInt;
+    hemiLight.color.setHex(p.hemiSky);
+    hemiLight.groundColor.setHex(p.hemiGnd);
+    hemiLight.intensity = p.hemiInt;
+    ambientLight.color.setHex(p.ambColor);
+    ambientLight.intensity = p.ambInt;
+    renderer.toneMappingExposure = p.exposure;
+    if (skyMesh) {
+        skyMesh.material.uniforms.topColor.value.setHex(p.skyTop);
+        skyMesh.material.uniforms.midColor.value.setHex(p.skyMid);
+        skyMesh.material.uniforms.botColor.value.setHex(p.skyBot);
+    }
+    if (fogEnabled) scene.fog.color.setHex(p.fogColor);
+    // Stars
+    scene.traverse(c => { if (c.userData.isStars) c.visible = p.starVis; });
+    // Moon
+    if (moonMesh) moonMesh.visible = p.moonVis;
+}
+
+function _currentDNSnapshot() {
+    return {
+        sunPos: sunLight.position.toArray(),
+        sunColor: sunLight.color.getHex(),
+        sunInt: sunLight.intensity,
+        hemiSky: hemiLight.color.getHex(),
+        hemiGnd: hemiLight.groundColor.getHex(),
+        hemiInt: hemiLight.intensity,
+        ambColor: ambientLight.color.getHex(),
+        ambInt: ambientLight.intensity,
+        skyTop: skyMesh ? skyMesh.material.uniforms.topColor.value.getHex() : 0x3a7fc1,
+        skyMid: skyMesh ? skyMesh.material.uniforms.midColor.value.getHex() : 0x87ceeb,
+        skyBot: skyMesh ? skyMesh.material.uniforms.botColor.value.getHex() : 0xd4aa77,
+        fogColor: scene.fog ? scene.fog.color.getHex() : 0xc8e0f0,
+        fogDensity: scene.fog ? scene.fog.density : 0.004,
+        exposure: renderer.toneMappingExposure,
+        starVis: false, moonVis: false
+    };
+}
+
+function _lerpDN(from, to, t) {
+    const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t; // ease in-out
+    const lc = (a,b) => {
+        const ca = new THREE.Color(a), cb = new THREE.Color(b);
+        return ca.lerp(cb, e).getHex();
+    };
+    const lf = (a,b) => a + (b-a)*e;
+    const la = (a,b) => [a[0]+(b[0]-a[0])*e, a[1]+(b[1]-a[1])*e, a[2]+(b[2]-a[2])*e];
+    return {
+        sunPos: la(from.sunPos, to.sunPos),
+        sunColor: lc(from.sunColor, to.sunColor),
+        sunInt: lf(from.sunInt, to.sunInt),
+        hemiSky: lc(from.hemiSky, to.hemiSky),
+        hemiGnd: lc(from.hemiGnd, to.hemiGnd),
+        hemiInt: lf(from.hemiInt, to.hemiInt),
+        ambColor: lc(from.ambColor, to.ambColor),
+        ambInt: lf(from.ambInt, to.ambInt),
+        skyTop: lc(from.skyTop, to.skyTop),
+        skyMid: lc(from.skyMid, to.skyMid),
+        skyBot: lc(from.skyBot, to.skyBot),
+        fogColor: lc(from.fogColor, to.fogColor),
+        fogDensity: lf(from.fogDensity, to.fogDensity),
+        exposure: lf(from.exposure, to.exposure),
+        starVis: t > 0.5 ? to.starVis : from.starVis,
+        moonVis: t > 0.5 ? to.moonVis : from.moonVis,
+    };
+}
+
+function tickDayNightTransition(delta) {
+    if (!dnTransition) return;
+    dnTransition.t += delta / dnTransition.duration;
+    if (dnTransition.t >= 1) { _applyDNImmediate(dnTransition.to); dnTransition = null; return; }
+    _applyDNImmediate(_lerpDN(dnTransition.from, dnTransition.to, dnTransition.t));
+}
+
+function toggleDayNight() {
+    if (dnCycleActive) {
+        // Stop cycle — stay on current
+        dnCycleActive = false;
+        const btn = document.getElementById('daynight-btn');
+        if (btn) btn.classList.remove('active');
+        toast('Day/Night cycle stopped');
+        return;
+    }
+    // Advance to next preset
+    dnCurrentIdx = (dnCurrentIdx + 1) % DAY_NIGHT_ORDER.length;
+    const preset = DAY_NIGHT_ORDER[dnCurrentIdx];
+    applyDayNightPreset(preset, false);
+    toast('Time of day: ' + preset.charAt(0).toUpperCase() + preset.slice(1));
+}
+
+function startDayNightCycle() {
+    dnCycleActive = true;
+    const btn = document.getElementById('daynight-btn');
+    if (btn) btn.classList.add('active');
+    toast('Day/Night cycle running — click again to stop');
+}
+
+// Auto-cycle tick (call from animate loop when active)
+let _dnLastTime = 0;
+function tickDayNightCycle(now) {
+    if (!dnCycleActive) return;
+    const delta = now - (_dnLastTime || now);
+    _dnLastTime = now;
+    dnCycleT = (dnCycleT + delta * 0.00003) % 1;
+    // Map dnCycleT through the presets smoothly
+    const n = DAY_NIGHT_ORDER.length;
+    const seg = dnCycleT * n;
+    const i0 = Math.floor(seg) % n;
+    const i1 = (i0 + 1) % n;
+    const lt = seg - Math.floor(seg);
+    const pA = DAY_NIGHT_PRESETS[DAY_NIGHT_ORDER[i0]];
+    const pB = DAY_NIGHT_PRESETS[DAY_NIGHT_ORDER[i1]];
+    _applyDNImmediate(_lerpDN(pA, pB, lt));
+}
+
+// Create moon object
+function createMoon() {
+    const moonGeo = new THREE.SphereGeometry(6, 16, 16);
+    const moonMat = new THREE.MeshStandardMaterial({ color: 0xeeeedd, emissive: 0xaaaaaa, emissiveIntensity: 0.4, roughness: 0.9, metalness: 0 });
+    moonMesh = new THREE.Mesh(moonGeo, moonMat);
+    moonMesh.position.set(-120, 180, -200);
+    moonMesh.visible = false;
+    moonMesh.userData.isMoon = true;
+    scene.add(moonMesh);
+}
+
+// ==================== FOG ====================
+let fogEnabled = false;
+let fogDensity = 0.006;
+
+function toggleFog() {
+    fogEnabled = !fogEnabled;
+    const btn = document.getElementById('fog-btn');
+    if (fogEnabled) {
+        const preset = DAY_NIGHT_PRESETS[DAY_NIGHT_ORDER[dnCurrentIdx]];
+        scene.fog = new THREE.FogExp2(preset.fogColor, fogDensity);
+        if (btn) btn.classList.add('active');
+        toast('Atmosphere fog on');
+    } else {
+        scene.fog = null;
+        if (btn) btn.classList.remove('active');
+        toast('Atmosphere fog off');
+    }
 }
 
 // ==================== CAMERA ====================
@@ -2758,6 +2942,10 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
             mesh.traverse(child => { if (child.isMesh && child.material) { child.material.map = tex; child.material.needsUpdate = true; } });
         }
 
+        // Face-darkening AO — give simple meshes per-face materials so bottom/sides
+        // read darker than the top, simulating contact shadow without a real AO pass.
+        applyFaceAO(mesh, blockType);
+
         // Anim types
         const ANIM_TYPES = { water:'water',lava:'lava',glass:'glass',ice:'glass',neon:'neon',glow:'glow' };
         if (ANIM_TYPES[blockType]) {
@@ -2861,7 +3049,12 @@ function animate() {
     if (keysPressed['ArrowUp']) { camPhi = Math.max(0.1, camPhi - keyRotationSpeed * 0.5); updateCam(); }
     if (keysPressed['ArrowDown']) { camPhi = Math.min(Math.PI/2 - 0.1, camPhi + keyRotationSpeed * 0.5); updateCam(); }
 
-    const time = Date.now() * 0.001;
+    const now = performance.now();
+    const time = now * 0.001;
+
+    // Day/night
+    if (dnCycleActive) tickDayNightCycle(now);
+    else if (dnTransition) tickDayNightTransition(16);
 
     // Clouds drift
     if (cloudMesh && cloudMesh.visible) {
@@ -3251,9 +3444,37 @@ document.addEventListener('keydown', e => {
     else if (k === 'g') toggleSnap();
     else if (k === 'p') { takeScreenshot(); playSound('screenshot'); }
     else if (k === 'm') toggleMute();
+    else if (k === 'n') toggleDayNight();
+    else if (k === 'f') toggleFog();
     if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)) e.preventDefault();
 });
 document.addEventListener('keyup', e => { keysPressed[e.key] = false; });
+
+// Day/night button: short click = next preset, hold 600ms = start/stop auto-cycle
+(function() {
+    const btn = document.getElementById('daynight-btn');
+    if (!btn) return;
+    let holdTimer = null;
+    let held = false;
+    btn.addEventListener('pointerdown', () => {
+        held = false;
+        holdTimer = setTimeout(() => {
+            held = true;
+            if (dnCycleActive) {
+                dnCycleActive = false;
+                btn.classList.remove('active');
+                toast('Auto-cycle stopped');
+            } else {
+                startDayNightCycle();
+            }
+        }, 600);
+    });
+    btn.addEventListener('pointerup', () => {
+        clearTimeout(holdTimer);
+        if (!held) toggleDayNight();
+    });
+    btn.addEventListener('pointerleave', () => clearTimeout(holdTimer));
+})();
 
 // ==================== FAVORITES BAR ====================
 let favorites = JSON.parse(safeStorage.getItem('brickforge_favorites') || '[]');
@@ -3910,6 +4131,30 @@ function createProceduralTexture(type) {
     const tex = new THREE.CanvasTexture(canvas);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
     return tex;
+}
+
+// Per-face ambient occlusion approximation.
+// BoxGeometry face order: +X, -X, +Y, -Y, +Z, -Z
+// We darken bottom (-Y = index 3), side faces (±X, ±Z), leave top (+Y) brightest.
+const AO_SKIP_TYPES = new Set(['glass','water','lava','ice','neon','glow','skyscraper_glass','skyscraper_modern','skyscraper_slim','skyscraper_wide','skyscraper_stepped','skyscraper_twisted']);
+function applyFaceAO(mesh, blockType) {
+    if (AO_SKIP_TYPES.has(blockType)) return;
+    mesh.traverse(child => {
+        if (!child.isMesh) return;
+        const geo = child.geometry;
+        if (!geo || geo.type !== 'BoxGeometry') return;
+        const mat = child.material;
+        if (!mat || Array.isArray(mat)) return;
+        // face order: +X(0), -X(1), +Y(2), -Y(3), +Z(4), -Z(5)
+        const factors = [0.78, 0.78, 1.0, 0.52, 0.85, 0.85];
+        const mats = factors.map(f => {
+            const m = mat.clone();
+            if (m.color) m.color.multiplyScalar(f);
+            if (m.emissive && f < 1) m.emissive.multiplyScalar(f);
+            return m;
+        });
+        child.material = mats;
+    });
 }
 
 function shiftColor(hex, factor) {

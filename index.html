@@ -995,6 +995,28 @@
                             <div class="block-btn" onclick="pickBlock('bleacher', this)" oncontextmenu="addToFavorites('bleacher',event)"><div class="icon" style="color:#7986cb"><i class="fas fa-align-justify"></i></div><div class="label">Bleacher</div></div>
                         </div>
                     </div>
+                    <div class="ml-4">
+                        <div class="category-header">Rounded Forms</div>
+                        <div class="flex flex-wrap">
+                            <div class="block-btn" onclick="pickBlock('round_wall', this)" oncontextmenu="addToFavorites('round_wall',event)"><div class="icon" style="color:#ce93d8"><i class="fas fa-circle-notch"></i></div><div class="label">Round Wall</div></div>
+                            <div class="block-btn" onclick="pickBlock('turret', this)" oncontextmenu="addToFavorites('turret',event)"><div class="icon" style="color:#b0bec5"><i class="fas fa-chess-rook"></i></div><div class="label">Turret</div></div>
+                            <div class="block-btn" onclick="pickBlock('dome', this)" oncontextmenu="addToFavorites('dome',event)"><div class="icon" style="color:#80cbc4"><i class="fas fa-circle"></i></div><div class="label">Dome</div></div>
+                            <div class="block-btn" onclick="pickBlock('bay_window', this)" oncontextmenu="addToFavorites('bay_window',event)"><div class="icon" style="color:#87CEEB"><i class="fas fa-columns"></i></div><div class="label">Bay Window</div></div>
+                            <div class="block-btn" onclick="pickBlock('rotunda', this)" oncontextmenu="addToFavorites('rotunda',event)"><div class="icon" style="color:#ffe082"><i class="fas fa-building"></i></div><div class="label">Rotunda</div></div>
+                            <div class="block-btn" onclick="pickBlock('arch_wall', this)" oncontextmenu="addToFavorites('arch_wall',event)"><div class="icon" style="color:#ef9a9a"><i class="fas fa-archway"></i></div><div class="label">Arch Wall</div></div>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <div class="category-header">Roads &amp; Paving</div>
+                        <div class="flex flex-wrap">
+                            <div class="block-btn" onclick="pickBlock('road', this)" oncontextmenu="addToFavorites('road',event)"><div class="icon" style="color:#607d8b"><i class="fas fa-road"></i></div><div class="label">Road</div></div>
+                            <div class="block-btn" onclick="pickBlock('road_cross', this)" oncontextmenu="addToFavorites('road_cross',event)"><div class="icon" style="color:#78909c"><i class="fas fa-plus"></i></div><div class="label">Intersection</div></div>
+                            <div class="block-btn" onclick="pickBlock('pavement', this)" oncontextmenu="addToFavorites('pavement',event)"><div class="icon" style="color:#bcaaa4"><i class="fas fa-th-large"></i></div><div class="label">Pavement</div></div>
+                            <div class="block-btn" onclick="pickBlock('curb', this)" oncontextmenu="addToFavorites('curb',event)"><div class="icon" style="color:#a5a5a5"><i class="fas fa-minus"></i></div><div class="label">Curb</div></div>
+                            <div class="block-btn" onclick="pickBlock('crosswalk', this)" oncontextmenu="addToFavorites('crosswalk',event)"><div class="icon" style="color:#eeeeee"><i class="fas fa-grip-lines"></i></div><div class="label">Crosswalk</div></div>
+                            <div class="block-btn" onclick="pickBlock('road_marking', this)" oncontextmenu="addToFavorites('road_marking',event)"><div class="icon" style="color:#fff176"><i class="fas fa-arrows-alt-h"></i></div><div class="label">Lane Mark</div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2198,6 +2220,20 @@ function updateGhostGeo() {
         case 'skyscraper_wide': geo = new THREE.BoxGeometry(s*2,s*2,s*1.2); break;
         case 'skyscraper_stepped': geo = new THREE.BoxGeometry(s,s*4,s); break;
         case 'skyscraper_twisted': geo = new THREE.BoxGeometry(s*0.9,s*4,s*0.9); break;
+        // Rounded buildings
+        case 'round_wall': geo = new THREE.CylinderGeometry(s*0.55,s*0.55,s*1.4,16,1,true,0,Math.PI/2); break;
+        case 'turret': geo = new THREE.CylinderGeometry(s*0.45,s*0.5,s*2.2,14); break;
+        case 'dome': geo = new THREE.SphereGeometry(s*0.55,16,10,0,Math.PI*2,0,Math.PI/2); break;
+        case 'bay_window': geo = new THREE.CylinderGeometry(s*0.38,s*0.38,s*0.9,10,1,false,0,Math.PI); break;
+        case 'rotunda': geo = new THREE.CylinderGeometry(s*0.9,s*1.0,s*0.18,20); break;
+        case 'arch_wall': geo = new THREE.CylinderGeometry(s*0.42,s*0.42,s*0.3,16,1,true,0,Math.PI); break;
+        // Roads & pavement
+        case 'road': geo = new THREE.BoxGeometry(s,s*0.07,s); break;
+        case 'road_cross': geo = new THREE.BoxGeometry(s,s*0.07,s); break;
+        case 'pavement': geo = new THREE.BoxGeometry(s,s*0.1,s); break;
+        case 'curb': geo = new THREE.BoxGeometry(s,s*0.18,s*0.14); break;
+        case 'crosswalk': geo = new THREE.BoxGeometry(s,s*0.07,s); break;
+        case 'road_marking': geo = new THREE.BoxGeometry(s*0.12,s*0.065,s*0.8); break;
         default: geo = new THREE.BoxGeometry(s,s,s);
     }
     ghost.geometry = geo;
@@ -2699,6 +2735,256 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         case 'fabric': geo=new THREE.BoxGeometry(size,size,size); mat=new THREE.MeshStandardMaterial({color:c,roughness:1}); break;
         case 'leaves': geo=new THREE.BoxGeometry(size,size,size); mat=new THREE.MeshStandardMaterial({color:c,roughness:0.8,flatShading:true}); break;
 
+        // ── ROUNDED BUILDINGS ──────────────────────────────────────────────
+        case 'round_wall': {
+            mesh=makeGroup();
+            const rwMat=new THREE.MeshStandardMaterial({color:c,roughness:0.88,metalness:0});
+            const rwTopMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.08),roughness:0.75});
+            // Quarter-cylinder curved wall panel
+            const rwBody=new THREE.Mesh(new THREE.CylinderGeometry(size*0.55,size*0.55,size*1.4,20,1,true,0,Math.PI/2),rwMat);
+            rwBody.castShadow=true; mesh.add(rwBody);
+            // Coping cap (quarter-ring)
+            const rwCap=new THREE.Mesh(new THREE.CylinderGeometry(size*0.58,size*0.52,size*0.065,20,1,false,0,Math.PI/2),rwTopMat);
+            rwCap.position.y=size*0.72; mesh.add(rwCap);
+            // Base plinth strip
+            const rwBase=new THREE.Mesh(new THREE.CylinderGeometry(size*0.58,size*0.6,size*0.055,20,1,false,0,Math.PI/2),rwTopMat);
+            rwBase.position.y=-size*0.7; mesh.add(rwBase);
+            // Horizontal mortar courses
+            for(let i=0;i<4;i++){
+                const band=new THREE.Mesh(new THREE.CylinderGeometry(size*0.555,size*0.555,size*0.018,20,1,true,0,Math.PI/2),
+                    new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,-0.1,-0.2),roughness:1}));
+                band.position.y=-size*0.55+i*size*0.37; mesh.add(band);
+            }
+            break;
+        }
+        case 'turret': {
+            mesh=makeGroup();
+            const tMat=new THREE.MeshStandardMaterial({color:c,roughness:0.85});
+            const tDkMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.15),roughness:0.9});
+            const tAccMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.1),roughness:0.7});
+            // Base splayed foot
+            const tFoot=new THREE.Mesh(new THREE.CylinderGeometry(size*0.56,size*0.64,size*0.12,16),tDkMat);
+            tFoot.position.y=size*0.06; mesh.add(tFoot);
+            // Main shaft
+            const tShaft=new THREE.Mesh(new THREE.CylinderGeometry(size*0.48,size*0.52,size*2.0,16),tMat);
+            tShaft.position.y=size*1.12; tShaft.castShadow=true; mesh.add(tShaft);
+            // Arrow-slit windows (4 sides)
+            for(let i=0;i<4;i++){
+                const ang=(i/4)*Math.PI*2;
+                const slit=new THREE.Mesh(new THREE.BoxGeometry(size*0.06,size*0.28,size*0.08),tDkMat);
+                slit.position.set(Math.cos(ang)*size*0.49,size*0.9,Math.sin(ang)*size*0.49);
+                slit.rotation.y=ang; mesh.add(slit);
+            }
+            // Corbel ring below battlements
+            const tCorbel=new THREE.Mesh(new THREE.CylinderGeometry(size*0.56,size*0.49,size*0.1,16),tAccMat);
+            tCorbel.position.y=size*2.17; mesh.add(tCorbel);
+            // Battlements — 6 merlons with 6 gaps
+            for(let i=0;i<6;i++){
+                const ang=(i/6)*Math.PI*2;
+                const merlon=new THREE.Mesh(new THREE.BoxGeometry(size*0.22,size*0.28,size*0.22),tMat);
+                merlon.position.set(Math.cos(ang)*size*0.44,size*2.41,Math.sin(ang)*size*0.44);
+                mesh.add(merlon);
+            }
+            // Flat roof disc
+            const tRoof=new THREE.Mesh(new THREE.CylinderGeometry(size*0.49,size*0.49,size*0.04,16),tDkMat);
+            tRoof.position.y=size*2.24; mesh.add(tRoof);
+            break;
+        }
+        case 'dome': {
+            mesh=makeGroup();
+            const dmMat=new THREE.MeshStandardMaterial({color:c,roughness:0.45,metalness:0.15});
+            const dmDrumMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.08),roughness:0.65});
+            const dmAccMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.12),roughness:0.35,metalness:0.2});
+            // Drum base (short cylinder)
+            const drum=new THREE.Mesh(new THREE.CylinderGeometry(size*0.62,size*0.65,size*0.22,24),dmDrumMat);
+            drum.position.y=size*0.11; mesh.add(drum);
+            // Dome hemisphere
+            const dome=new THREE.Mesh(new THREE.SphereGeometry(size*0.6,24,14,0,Math.PI*2,0,Math.PI/2),dmMat);
+            dome.position.y=size*0.22; dome.castShadow=true; mesh.add(dome);
+            // Lantern finial at top
+            const lantern=new THREE.Mesh(new THREE.CylinderGeometry(size*0.065,size*0.09,size*0.2,10),dmDrumMat);
+            lantern.position.y=size*0.84; mesh.add(lantern);
+            const finial=new THREE.Mesh(new THREE.SphereGeometry(size*0.07,8,6),dmAccMat);
+            finial.position.y=size*0.99; mesh.add(finial);
+            // Ribs (8 raised strips over dome surface)
+            for(let i=0;i<8;i++){
+                const ang=(i/8)*Math.PI*2;
+                const rib=new THREE.Mesh(new THREE.TorusGeometry(size*0.6,size*0.018,6,18,Math.PI/2),dmAccMat);
+                rib.rotation.y=ang; rib.rotation.x=Math.PI/2;
+                rib.position.y=size*0.22+size*0.3; mesh.add(rib);
+            }
+            break;
+        }
+        case 'bay_window': {
+            mesh=makeGroup();
+            const bwFrmMat=new THREE.MeshStandardMaterial({color:c,roughness:0.75});
+            const bwGlsMat=new THREE.MeshPhysicalMaterial({color:0xaaddff,transparent:true,opacity:0.15,roughness:0.02,transmission:0.94,thickness:0.3,emissive:0x88ccff,emissiveIntensity:0.12});
+            // Curved glass face (half-cylinder open shell)
+            const bwGls=new THREE.Mesh(new THREE.CylinderGeometry(size*0.42,size*0.42,size*0.88,14,1,true,0,Math.PI),bwGlsMat);
+            bwGls.rotation.y=-Math.PI/2; bwGls.userData={isWindow:true}; mesh.add(bwGls);
+            // Frame top cap
+            const bwTop=new THREE.Mesh(new THREE.CylinderGeometry(size*0.45,size*0.42,size*0.055,14,1,false,0,Math.PI),bwFrmMat);
+            bwTop.rotation.y=-Math.PI/2; bwTop.position.y=size*0.47; mesh.add(bwTop);
+            // Frame bottom sill
+            const bwSill=new THREE.Mesh(new THREE.CylinderGeometry(size*0.46,size*0.44,size*0.06,14,1,false,0,Math.PI),bwFrmMat);
+            bwSill.rotation.y=-Math.PI/2; bwSill.position.y=-size*0.47; mesh.add(bwSill);
+            // Mullion strips (3 verticals)
+            for(let i=0;i<3;i++){
+                const ang=(i/2)*Math.PI;
+                const mull=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.88,size*0.04),bwFrmMat);
+                mull.position.set(Math.cos(ang+Math.PI/2)*size*0.43,0,Math.sin(ang+Math.PI/2)*size*0.43);
+                mesh.add(mull);
+            }
+            break;
+        }
+        case 'rotunda': {
+            mesh=makeGroup();
+            const rtMat=new THREE.MeshStandardMaterial({color:c,roughness:0.72});
+            const rtAccMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.1),roughness:0.55});
+            const rtDkMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.12),roughness:0.85});
+            // Main cylinder body
+            const rtBody=new THREE.Mesh(new THREE.CylinderGeometry(size*0.9,size*0.96,size*1.6,24),rtMat);
+            rtBody.position.y=size*0.8; rtBody.castShadow=true; mesh.add(rtBody);
+            // Base steps (2 rings)
+            const st1=new THREE.Mesh(new THREE.CylinderGeometry(size*1.06,size*1.1,size*0.09,24),rtDkMat);
+            st1.position.y=size*0.045; mesh.add(st1);
+            const st2=new THREE.Mesh(new THREE.CylinderGeometry(size*1.18,size*1.22,size*0.07,24),rtDkMat);
+            st2.position.y=-size*0.035; mesh.add(st2);
+            // Entablature ring at top
+            const entab=new THREE.Mesh(new THREE.CylinderGeometry(size*0.94,size*0.9,size*0.1,24),rtAccMat);
+            entab.position.y=size*1.65; mesh.add(entab);
+            // Columns around perimeter (10)
+            for(let i=0;i<10;i++){
+                const ang=(i/10)*Math.PI*2;
+                const col=new THREE.Mesh(new THREE.CylinderGeometry(size*0.065,size*0.08,size*1.55,10),rtAccMat);
+                col.position.set(Math.cos(ang)*size*0.86,size*0.8,Math.sin(ang)*size*0.86);
+                mesh.add(col);
+            }
+            // Flat roof slab
+            const rtRoof=new THREE.Mesh(new THREE.CylinderGeometry(size*0.92,size*0.92,size*0.06,24),rtDkMat);
+            rtRoof.position.y=size*1.63; mesh.add(rtRoof);
+            break;
+        }
+        case 'arch_wall': {
+            mesh=makeGroup();
+            const awMat=new THREE.MeshStandardMaterial({color:c,roughness:0.88});
+            const awDkMat=new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,-0.18),roughness:0.9});
+            // Left pier
+            const awPL=new THREE.Mesh(new THREE.BoxGeometry(size*0.22,size*1.0,size*0.3),awMat);
+            awPL.position.set(-size*0.5,size*0.0,0); awPL.castShadow=true; mesh.add(awPL);
+            // Right pier
+            const awPR=awPL.clone(); awPR.position.x=size*0.5; mesh.add(awPR);
+            // Arch ring (half-torus)
+            const awArch=new THREE.Mesh(new THREE.TorusGeometry(size*0.42,size*0.12,8,22,Math.PI),awMat);
+            awArch.rotation.z=Math.PI; awArch.position.y=size*0.52; mesh.add(awArch);
+            // Keystone
+            const awKey=new THREE.Mesh(new THREE.BoxGeometry(size*0.16,size*0.22,size*0.32),
+                new THREE.MeshStandardMaterial({color:new THREE.Color(color).offsetHSL(0,0,0.1),roughness:0.8}));
+            awKey.position.y=size*0.95; mesh.add(awKey);
+            // Spandrel fill (triangular wall above arch)
+            const awSpan=new THREE.Mesh(new THREE.BoxGeometry(size*1.06,size*0.38,size*0.28),awMat);
+            awSpan.position.y=size*1.19; mesh.add(awSpan);
+            // Voussoir lines on arch
+            for(let i=0;i<5;i++){
+                const ang=(i/4)*Math.PI;
+                const vx=Math.cos(ang)*size*0.42, vy=Math.sin(ang)*size*0.42;
+                const vLine=new THREE.Mesh(new THREE.BoxGeometry(size*0.02,size*0.22,size*0.32),awDkMat);
+                vLine.position.set(vx,vy+size*0.52,0);
+                vLine.rotation.z=ang-Math.PI/2; mesh.add(vLine);
+            }
+            break;
+        }
+
+        // ── ROADS & PAVEMENT ───────────────────────────────────────────────
+        case 'road': {
+            mesh=makeGroup();
+            const rdMat=new THREE.MeshStandardMaterial({color:0x282828,roughness:0.96,metalness:0});
+            const rdLineMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8,emissive:0xffffff,emissiveIntensity:0.04});
+            const rdYellowMat=new THREE.MeshStandardMaterial({color:0xffcc00,roughness:0.8,emissive:0xffcc00,emissiveIntensity:0.05});
+            // Road slab
+            const rdSlab=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.07,size),rdMat);
+            rdSlab.receiveShadow=true; mesh.add(rdSlab);
+            // Centre dashed line
+            for(let i=-1;i<=1;i++){
+                const dash=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.072,size*0.22),rdYellowMat);
+                dash.position.set(0,0,i*size*0.32); mesh.add(dash);
+            }
+            // Edge lines both sides
+            for(let s of[-1,1]){
+                const edge=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.072,size),rdLineMat);
+                edge.position.x=s*size*0.44; mesh.add(edge);
+            }
+            break;
+        }
+        case 'road_cross': {
+            mesh=makeGroup();
+            const rcMat=new THREE.MeshStandardMaterial({color:0x252525,roughness:0.96});
+            const rcLineMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8,emissive:0xffffff,emissiveIntensity:0.04});
+            const rcYellow=new THREE.MeshStandardMaterial({color:0xffcc00,roughness:0.8});
+            const rcSlab=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.07,size),rcMat);
+            rcSlab.receiveShadow=true; mesh.add(rcSlab);
+            // 4 edge lines
+            for(let s of[-1,1]){
+                const h=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.072,size*0.04),rcLineMat); h.position.z=s*size*0.44; mesh.add(h);
+                const v=new THREE.Mesh(new THREE.BoxGeometry(size*0.04,size*0.072,size),rcLineMat); v.position.x=s*size*0.44; mesh.add(v);
+            }
+            // Centre crosshair
+            const ch=new THREE.Mesh(new THREE.BoxGeometry(size*0.06,size*0.072,size*0.06),rcYellow);
+            ch.position.y=0; mesh.add(ch);
+            break;
+        }
+        case 'pavement': {
+            mesh=makeGroup();
+            const pvMat=new THREE.MeshStandardMaterial({color:0xaaa090,roughness:0.92});
+            const pvJointMat=new THREE.MeshStandardMaterial({color:0x807060,roughness:0.98});
+            const pvSlab=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.1,size),pvMat);
+            pvSlab.receiveShadow=true; mesh.add(pvSlab);
+            // Scored joint lines (2×2 grid of slabs)
+            for(let xi of[-0.25,0,0.25]){
+                const jv=new THREE.Mesh(new THREE.BoxGeometry(size*0.018,size*0.102,size),pvJointMat);
+                jv.position.x=xi*size; mesh.add(jv);
+            }
+            for(let zi of[-0.25,0,0.25]){
+                const jh=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.102,size*0.018),pvJointMat);
+                jh.position.z=zi*size; mesh.add(jh);
+            }
+            break;
+        }
+        case 'curb': {
+            mesh=makeGroup();
+            const cbMat=new THREE.MeshStandardMaterial({color:0xc0b8a8,roughness:0.9});
+            const cbDkMat=new THREE.MeshStandardMaterial({color:0x9a9080,roughness:0.95});
+            // Vertical face
+            const cbFace=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.18,size*0.1),cbMat);
+            cbFace.position.set(0,0,size*0.02); cbFace.castShadow=true; mesh.add(cbFace);
+            // Top lip (angled suggestion via thin box)
+            const cbTop=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.045,size*0.16),cbMat);
+            cbTop.position.set(0,size*0.1,size*0.05); mesh.add(cbTop);
+            // Base footer
+            const cbBase=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.04,size*0.2),cbDkMat);
+            cbBase.position.set(0,-size*0.1,-size*0.02); mesh.add(cbBase);
+            break;
+        }
+        case 'crosswalk': {
+            mesh=makeGroup();
+            const cwRoadMat=new THREE.MeshStandardMaterial({color:0x282828,roughness:0.95});
+            const cwStripeMat=new THREE.MeshStandardMaterial({color:0xeeeeee,roughness:0.8,emissive:0xffffff,emissiveIntensity:0.06});
+            const cwSlab=new THREE.Mesh(new THREE.BoxGeometry(size,size*0.07,size),cwRoadMat);
+            cwSlab.receiveShadow=true; mesh.add(cwSlab);
+            // 5 zebra stripes
+            for(let i=0;i<5;i++){
+                const stripe=new THREE.Mesh(new THREE.BoxGeometry(size*0.8,size*0.072,size*0.1),cwStripeMat);
+                stripe.position.z=-size*0.4+i*size*0.2; mesh.add(stripe);
+            }
+            break;
+        }
+        case 'road_marking': {
+            mesh=makeGroup();
+            const rmMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8,emissive:0xffffff,emissiveIntensity:0.05});
+            const rmLine=new THREE.Mesh(new THREE.BoxGeometry(size*0.1,size*0.065,size*0.8),rmMat);
+            mesh.add(rmLine); break;
+        }
+
         case 'canopy': {
             mesh=makeGroup();
             const roofMat=new THREE.MeshStandardMaterial({color:c,roughness:0.6,metalness:0.55});
@@ -2936,15 +3222,16 @@ function buildAtPosition(pos, blockType, color, size, rotation, isMirror) {
         };
 
         // Textures
-        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete',canopy:'metal',fuel_pump:'metal',sign:'metal',flagpole:'metal',bollard:'metal',hvac:'metal',bench:'wood',bleacher:'metal' };
+        const BLOCK_TEX_MAP = { brick:'brick',wood:'wood',plank:'wood',log:'wood',stone:'stone',cobblestone:'stone',marble:'stone',metal:'metal',steel:'metal',iron:'metal',concrete:'concrete',canopy:'metal',fuel_pump:'metal',sign:'metal',flagpole:'metal',bollard:'metal',hvac:'metal',bench:'wood',bleacher:'metal',round_wall:'stone',turret:'stone',dome:'stone',bay_window:'stone',rotunda:'stone',arch_wall:'stone',road:'concrete',road_cross:'concrete',pavement:'concrete',crosswalk:'concrete' };
         if (BLOCK_TEX_MAP[blockType]) {
             const tex = getCachedTexture(BLOCK_TEX_MAP[blockType]);
             mesh.traverse(child => { if (child.isMesh && child.material) { child.material.map = tex; child.material.needsUpdate = true; } });
         }
 
-        // Face-darkening AO — give simple meshes per-face materials so bottom/sides
-        // read darker than the top, simulating contact shadow without a real AO pass.
-        applyFaceAO(mesh, blockType);
+        // Subtle face-contrast AO (only on plain single-mesh cube blocks, not groups)
+        if (!mesh.isGroup && mesh.isMesh && mesh.geometry && mesh.geometry.type === 'BoxGeometry' && mesh.material && !Array.isArray(mesh.material)) {
+            applyFaceAO(mesh, blockType);
+        }
 
         // Anim types
         const ANIM_TYPES = { water:'water',lava:'lava',glass:'glass',ice:'glass',neon:'neon',glow:'glow' };
@@ -4146,7 +4433,7 @@ function applyFaceAO(mesh, blockType) {
         const mat = child.material;
         if (!mat || Array.isArray(mat)) return;
         // face order: +X(0), -X(1), +Y(2), -Y(3), +Z(4), -Z(5)
-        const factors = [0.78, 0.78, 1.0, 0.52, 0.85, 0.85];
+        const factors = [0.93, 0.93, 1.0, 0.78, 0.96, 0.96];
         const mats = factors.map(f => {
             const m = mat.clone();
             if (m.color) m.color.multiplyScalar(f);

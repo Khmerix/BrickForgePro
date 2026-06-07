@@ -3638,15 +3638,25 @@ function animate() {
 // ==================== UI FUNCTIONS ====================
 function toggleLeftPanel() {
     const panel = document.getElementById('left-panel');
-    const tab = document.getElementById('left-tab');
-    panel.classList.toggle('panel-open');
-    tab.classList.toggle('panel-open');
+    const tab   = document.getElementById('left-tab');
+    const isOpen = panel.classList.contains('panel-open');
+    // Close right panel first
+    document.getElementById('right-panel').classList.remove('panel-open');
+    document.getElementById('right-tab').classList.remove('panel-open');
+    // Toggle left
+    panel.classList.toggle('panel-open', !isOpen);
+    tab.classList.toggle('panel-open', !isOpen);
 }
 function toggleRightPanel() {
     const panel = document.getElementById('right-panel');
-    const tab = document.getElementById('right-tab');
-    panel.classList.toggle('panel-open');
-    tab.classList.toggle('panel-open');
+    const tab   = document.getElementById('right-tab');
+    const isOpen = panel.classList.contains('panel-open');
+    // Close left panel first
+    document.getElementById('left-panel').classList.remove('panel-open');
+    document.getElementById('left-tab').classList.remove('panel-open');
+    // Toggle right
+    panel.classList.toggle('panel-open', !isOpen);
+    tab.classList.toggle('panel-open', !isOpen);
 }
 
 function switchTab(tab, e) {

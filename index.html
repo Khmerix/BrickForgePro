@@ -521,12 +521,14 @@
 
         /* RIGHT PANEL (old floating pill — now repurposed as action rail) */
         .right-panel {
+            position: fixed; top: 8px; right: 10px;
             display: flex; flex-direction: column; align-items: center; gap: 4px;
             padding: 10px 8px;
             background: linear-gradient(180deg, rgba(10,10,22,0.92), rgba(8,8,18,0.88));
             border: 1px solid var(--glass-border); border-radius: 24px;
             backdrop-filter: blur(24px) saturate(180%);
             box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            z-index: 300; pointer-events: auto;
         }
         .right-panel-divider { width: 24px; height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0; }
 
@@ -686,7 +688,7 @@
 
         /* LAYOUT */
         #canvas-container { width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 0; }
-        .ui-layer { position: fixed; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none; padding: 8px 10px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .ui-layer { position: fixed; top: 8px; left: 10px; z-index: 300; pointer-events: none; }
         .ui-interactive { pointer-events: auto; }
         .field-label { font-size: 9px; font-family: 'Orbitron', monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 6px; display: block; opacity: 0.85; }
     </style>
@@ -1193,47 +1195,45 @@
     </div>
 </div><!-- /right-panel -->
 
-<!-- TOP BAR (compact) -->
-<div class="ui-layer">
-    <div class="flex justify-between items-start ui-interactive" style="gap:8px;">
-        <!-- Left: Logo + tools + counter -->
-        <div class="glass-panel" style="padding:7px 12px; display:flex; align-items:center; gap:10px;">
-            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                <i class="fas fa-cubes" style="color:var(--accent); font-size:16px; filter:drop-shadow(0 0 8px var(--accent));"></i>
-                <span class="bf-logo" style="font-size:15px;">BrickForge</span>
-                <span class="pro-badge">PRO</span>
-            </div>
-            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
-            <div class="tool-pill ui-interactive">
-                <button onclick="setTool('build')" class="tool-pill-btn active" id="tool-build"><i class="fas fa-hammer" style="font-size:12px;"></i> Build</button>
-                <button onclick="setTool('erase')" class="tool-pill-btn" id="tool-erase"><i class="fas fa-eraser" style="font-size:12px;"></i> Erase</button>
-            </div>
-            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
-            <div class="block-counter" style="flex-shrink:0;">
-                <span class="block-counter-label">Blocks</span>
-                <span class="block-counter-num" id="block-count">0</span>
-            </div>
-            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
-            <div style="flex-direction:column; align-items:center; display:flex; flex-shrink:0;">
-                <span style="font-size:8px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.35); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:3px;">Rotate</span>
-                <div style="display:flex; gap:2px;"><span class="key-badge">←</span><span class="key-badge">→</span><span class="key-badge">↑</span><span class="key-badge">↓</span></div>
-            </div>
+<!-- RIGHT ACTION PILL (fixed top-right) -->
+<div class="right-panel ui-interactive">
+    <button onclick="smoothResetCamera()" class="tip-btn" data-tip="Reset Camera"><i class="fas fa-home"></i></button>
+    <button onclick="toggleGrid()" class="tip-btn active" id="grid-btn" data-tip="Toggle Grid (G)"><i class="fas fa-border-all"></i></button>
+    <button onclick="rotateGhost()" class="tip-btn" data-tip="Rotate (R)"><i class="fas fa-sync-alt"></i></button>
+    <div class="right-panel-divider"></div>
+    <button id="daynight-btn" class="tip-btn" data-tip="Next time of day (N)"><i class="fas fa-sun"></i></button>
+    <button onclick="toggleFog()" class="tip-btn" id="fog-btn" data-tip="Toggle Fog"><i class="fas fa-smog"></i></button>
+    <div class="right-panel-divider"></div>
+    <button onclick="takeScreenshot(); playSound('screenshot');" class="tip-btn" data-tip="Screenshot (P)"><i class="fas fa-camera"></i></button>
+    <button onclick="openThemePicker()" class="tip-btn" data-tip="Theme"><i class="fas fa-palette"></i></button>
+    <button id="mute-btn" onclick="toggleMute()" class="tip-btn" data-tip="Sound (M)"><i class="fas fa-volume-up"></i></button>
+</div>
+
+<!-- TOP BAR (fixed top-left) -->
+<div class="ui-layer ui-interactive">
+    <div class="glass-panel" style="padding:7px 12px; display:flex; align-items:center; gap:10px; pointer-events:auto;">
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <i class="fas fa-cubes" style="color:var(--accent); font-size:16px; filter:drop-shadow(0 0 8px var(--accent));"></i>
+            <span class="bf-logo" style="font-size:15px;">BrickForge</span>
+            <span class="pro-badge">PRO</span>
         </div>
-        <!-- Right: Action pill -->
-        <div class="right-panel ui-interactive">
-            <button onclick="smoothResetCamera()" class="tip-btn" data-tip="Reset Camera"><i class="fas fa-home"></i></button>
-            <button onclick="toggleGrid()" class="tip-btn active" id="grid-btn" data-tip="Toggle Grid (G)"><i class="fas fa-border-all"></i></button>
-            <button onclick="rotateGhost()" class="tip-btn" data-tip="Rotate (R)"><i class="fas fa-sync-alt"></i></button>
-            <div class="right-panel-divider"></div>
-            <button id="daynight-btn" class="tip-btn" data-tip="Next time of day (N)"><i class="fas fa-sun"></i></button>
-            <button onclick="toggleFog()" class="tip-btn" id="fog-btn" data-tip="Toggle Fog"><i class="fas fa-smog"></i></button>
-            <div class="right-panel-divider"></div>
-            <button onclick="takeScreenshot(); playSound('screenshot');" class="tip-btn" data-tip="Screenshot (P)"><i class="fas fa-camera"></i></button>
-            <button onclick="openThemePicker()" class="tip-btn" data-tip="Theme"><i class="fas fa-palette"></i></button>
-            <button id="mute-btn" onclick="toggleMute()" class="tip-btn" data-tip="Sound (M)"><i class="fas fa-volume-up"></i></button>
+        <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+        <div class="tool-pill">
+            <button onclick="setTool('build')" class="tool-pill-btn active" id="tool-build"><i class="fas fa-hammer" style="font-size:12px;"></i> Build</button>
+            <button onclick="setTool('erase')" class="tool-pill-btn" id="tool-erase"><i class="fas fa-eraser" style="font-size:12px;"></i> Erase</button>
+        </div>
+        <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+        <div class="block-counter" style="flex-shrink:0;">
+            <span class="block-counter-label">Blocks</span>
+            <span class="block-counter-num" id="block-count">0</span>
+        </div>
+        <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+        <div style="flex-direction:column; align-items:center; display:flex; flex-shrink:0;">
+            <span style="font-size:8px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.35); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:3px;">Rotate</span>
+            <div style="display:flex; gap:2px;"><span class="key-badge">←</span><span class="key-badge">→</span><span class="key-badge">↑</span><span class="key-badge">↓</span></div>
         </div>
     </div>
-</div><!-- /ui-layer -->
+</div>
 
 <div class="toast-container" id="toast-container"></div>
 

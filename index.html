@@ -391,9 +391,9 @@
 
         /* BLOCK BUTTONS */
         .block-btn {
-            width: 66px; height: 66px; border-radius: 14px;
+            width: 54px; height: 54px; border-radius: 12px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; margin: 4px; border: 1.5px solid transparent;
+            cursor: pointer; margin: 3px; border: 1.5px solid transparent;
             background: linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0;
             box-shadow: 0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
@@ -419,7 +419,7 @@
             transform: scale(1.08);
         }
         .block-btn .icon {
-            font-size: 22px; margin-bottom: 3px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 17px; margin-bottom: 2px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; align-items: center; justify-content: center;
         }
         .block-btn .icon i {
@@ -473,7 +473,53 @@
         .panel-section { display: none; }
         .panel-section.active { display: block; }
 
-        /* RIGHT PANEL */
+        /* ── SLIDE PANELS ── */
+        .slide-panel {
+            position: fixed;
+            top: 58px; bottom: 0;
+            width: 270px;
+            background: linear-gradient(180deg, rgba(8,8,20,0.97), rgba(6,6,16,0.95));
+            backdrop-filter: blur(24px) saturate(180%);
+            border-top: 1px solid rgba(0,212,255,0.12);
+            z-index: 200;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: auto;
+        }
+        .slide-panel::-webkit-scrollbar { width: 4px; }
+        .slide-panel::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 2px; }
+        #left-panel  { left:0;  transform: translateX(-100%); border-right: 1px solid rgba(0,212,255,0.15); }
+        #right-panel { right:0; transform: translateX(100%);  border-left:  1px solid rgba(0,212,255,0.15); }
+        #left-panel.panel-open  { transform: translateX(0); }
+        #right-panel.panel-open { transform: translateX(0); }
+
+        /* Panel pull-tabs */
+        .panel-tab {
+            position: fixed; top: 50%; z-index: 201;
+            width: 22px; height: 56px;
+            background: linear-gradient(180deg, rgba(0,212,255,0.18), rgba(0,212,255,0.08));
+            border: 1px solid rgba(0,212,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.32s cubic-bezier(0.4,0,0.2,1);
+            pointer-events: auto;
+            font-size: 10px; color: var(--accent);
+        }
+        #left-tab  { left:0;  border-radius:0 10px 10px 0; transform: translateY(-50%); }
+        #right-tab { right:0; border-radius:10px 0 0 10px; transform: translateY(-50%); }
+        #left-tab.panel-open  { left:270px; }
+        #right-tab.panel-open { right:270px; }
+        .panel-tab:hover { background: rgba(0,212,255,0.28); }
+
+        .panel-header {
+            font-size: 9px; font-family: 'Orbitron', monospace;
+            color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em;
+            padding: 10px 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .panel-inner { padding: 10px; }
+
+        /* RIGHT PANEL (old floating pill — now repurposed as action rail) */
         .right-panel {
             display: flex; flex-direction: column; align-items: center; gap: 4px;
             padding: 10px 8px;
@@ -640,7 +686,7 @@
 
         /* LAYOUT */
         #canvas-container { width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 0; }
-        .ui-layer { position: relative; z-index: 10; pointer-events: none; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; }
+        .ui-layer { position: fixed; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none; padding: 8px 10px; display: flex; justify-content: space-between; align-items: flex-start; }
         .ui-interactive { pointer-events: auto; }
         .field-label { font-size: 9px; font-family: 'Orbitron', monospace; color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 6px; display: block; opacity: 0.85; }
     </style>
@@ -779,131 +825,37 @@
 </div>
 
 <!-- MAIN UI LAYER -->
-<div class="ui-layer">
-    <!-- TOP BAR -->
-    <div class="flex justify-between items-start ui-interactive" style="gap:10px;">
-        <!-- Left: Logo + tools + counters -->
-        <div class="glass-panel" style="padding:10px 14px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:7px; flex-shrink:0;">
-                <i class="fas fa-cubes" style="color:var(--accent); font-size:18px; filter:drop-shadow(0 0 10px var(--accent));"></i>
-                <span class="bf-logo" style="font-size:17px;">BrickForge</span>
-                <span class="pro-badge">PRO</span>
-            </div>
-            <div style="width:1px; height:30px; background:rgba(255,255,255,0.1);"></div>
-            <!-- Tool Pill -->
-            <div class="tool-pill ui-interactive">
-                <button onclick="setTool('build')" class="tool-pill-btn active" id="tool-build"><i class="fas fa-hammer" style="font-size:13px;"></i> Build</button>
-                <button onclick="setTool('erase')" class="tool-pill-btn" id="tool-erase"><i class="fas fa-eraser" style="font-size:13px;"></i> Erase</button>
-            </div>
-            <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
-            <!-- Undo + Clear -->
-            <button onclick="undo()" class="glass-btn icon-btn" title="Undo (Ctrl+Z)" style="border-radius:50%;"><i class="fas fa-undo" style="font-size:13px;"></i></button>
-            <button onclick="if(confirm('Clear all blocks? This cannot be undone.')) clearAll()" class="glass-btn icon-btn" title="Clear All" style="border-radius:50%; border-color:rgba(239,68,68,0.35);"><i class="fas fa-trash" style="color:#ef4444; font-size:13px;"></i></button>
-            <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
-            <!-- Snap Toggle -->
-            <div class="flex items-center gap-2" title="Toggle Grid Snapping" style="flex-shrink:0;">
-                <span style="font-size:9px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.45); letter-spacing:0.15em; text-transform:uppercase;">SNAP</span>
-                <div class="snap-toggle active" id="snap-toggle" onclick="toggleSnap()"></div>
-            </div>
-            <!-- Symmetry Toggle -->
-            <div class="flex items-center gap-2" title="Symmetry Mode" style="flex-shrink:0;">
-                <span style="font-size:9px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.45); letter-spacing:0.15em; text-transform:uppercase;">SYM</span>
-                <button class="sym-btn" id="sym-btn" onclick="cycleSymmetry()">NONE</button>
-            </div>
-            <!-- Block Counter -->
-            <div class="block-counter" style="flex-shrink:0;">
-                <span class="block-counter-label">Blocks</span>
-                <span class="block-counter-num" id="block-count">0</span>
-            </div>
-            <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
-            <!-- Rotate Keys -->
-            <div style="flex-direction:column; align-items:center; display:flex; flex-shrink:0;">
-                <span style="font-size:8px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.35); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:4px;">Rotate</span>
-                <div style="display:flex; gap:3px;"><span class="key-badge">←</span><span class="key-badge">→</span><span class="key-badge">↑</span><span class="key-badge">↓</span></div>
-            </div>
-            <div style="width:1px; height:28px; background:rgba(255,255,255,0.1);"></div>
-            <!-- Templates Button -->
-            <button onclick="openTemplatesModal()" class="glass-btn" style="font-size:10px; padding:7px 12px; border-color:rgba(168,85,247,0.4); color:#a855f7;">
-                <i class="fas fa-layer-group" style="font-size:11px;"></i> Templates
-            </button>
-            <!-- Toolbar Toggle -->
-            <button onclick="toggleToolbar()" class="glass-btn icon-btn" title="Toggle Toolbar (T)" style="border-radius:50%; background:linear-gradient(135deg,rgba(0,212,255,0.18),rgba(0,212,255,0.07));">
-                <i class="fas fa-chevron-down" id="toolbar-arrow" style="font-size:13px; transition:transform 0.3s;"></i>
-            </button>
-        </div>
+<!-- LEFT PANEL PULL TAB -->
+<div class="panel-tab ui-interactive" id="left-tab" onclick="toggleLeftPanel()" title="Blocks (B)">
+    <i class="fas fa-cubes" style="font-size:11px;"></i>
+</div>
 
-        <!-- Right Panel: floating pill -->
-        <div class="right-panel ui-interactive">
-            <button onclick="smoothResetCamera()" class="tip-btn" data-tip="Reset Camera"><i class="fas fa-home"></i></button>
-            <button onclick="toggleGrid()" class="tip-btn active" id="grid-btn" data-tip="Toggle Grid (G)"><i class="fas fa-border-all"></i></button>
-            <button onclick="rotateGhost()" class="tip-btn" data-tip="Rotate Block (R)"><i class="fas fa-sync-alt"></i></button>
-            <div class="right-panel-divider"></div>
-            <button id="daynight-btn" class="tip-btn" data-tip="Next time of day (N) · Hold for auto-cycle"><i class="fas fa-sun"></i></button>
-            <button onclick="toggleFog()" class="tip-btn" id="fog-btn" data-tip="Toggle Fog"><i class="fas fa-smog"></i></button>
-            <div class="right-panel-divider"></div>
-            <button onclick="takeScreenshot(); playSound('screenshot');" class="tip-btn" data-tip="Screenshot (P)"><i class="fas fa-camera"></i></button>
-            <button onclick="openThemePicker()" class="tip-btn" data-tip="Change Theme"><i class="fas fa-palette"></i></button>
-            <button id="mute-btn" onclick="toggleMute()" class="tip-btn" data-tip="Toggle Sound (M)"><i class="fas fa-volume-up"></i></button>
-            <button onclick="openSaveModal()" class="tip-btn" data-tip="Save / Load (Ctrl+S)"><i class="fas fa-save"></i></button>
-        </div>
+<!-- RIGHT PANEL PULL TAB -->
+<div class="panel-tab ui-interactive" id="right-tab" onclick="toggleRightPanel()" title="Properties">
+    <i class="fas fa-sliders-h" style="font-size:11px;"></i>
+</div>
+
+<!-- LEFT SLIDE PANEL: Blocks -->
+<div id="left-panel" class="slide-panel ui-interactive">
+    <div class="panel-header">
+        <span><i class="fas fa-cubes" style="margin-right:6px;"></i>Blocks</span>
+        <button onclick="toggleLeftPanel()" style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">✕</button>
     </div>
-
-    <!-- BOTTOM TOOLBAR -->
-    <div id="bottom-toolbar" class="glass-panel ui-interactive" style="padding:0; position:relative; max-height:38vh; overflow-y:auto; margin:0 0 4px 0;">
-
-        <!-- FAVORITES BAR -->
-        <div id="favorites-bar">
-            <span class="fav-hint" id="fav-hint">Pin your favorites here (right-click any block)</span>
-            <div id="fav-slots" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
-        </div>
-
-        <div style="padding:12px 14px;">
-            <!-- Tab Bar -->
-            <div class="tab-bar" style="margin-bottom:10px; display:inline-flex;">
-                <button class="tab-btn active" onclick="switchTab('blocks', event)">Blocks</button>
-                <button class="tab-btn" onclick="switchTab('architecture', event)">Architecture</button>
-                <button class="tab-btn" onclick="switchTab('nature', event)">Nature</button>
-                <button class="tab-btn" onclick="switchTab('materials', event)">Materials</button>
-                <button class="tab-btn" onclick="switchTab('platform', event)">Terrain</button>
-                <button class="tab-btn" onclick="switchTab('scene', event)">🌍 Scene</button>
-            </div>
-
-            <!-- Controls Row -->
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.07);">
-                <div class="size-control">
-                    <button onclick="setSize(0.5)" class="size-btn" id="size-05">0.5</button>
-                    <button onclick="setSize(1)"   class="size-btn active" id="size-1">1</button>
-                    <button onclick="setSize(2)"   class="size-btn" id="size-2">2</button>
-                    <button onclick="setSize(4)"   class="size-btn" id="size-4">4</button>
-                </div>
-                <div style="width:1px; height:24px; background:rgba(255,255,255,0.08);"></div>
-                <div id="colors" style="display:flex; gap:5px; flex-wrap:wrap; max-width:480px; padding:8px 10px; background:rgba(0,0,0,0.3); border-radius:12px; border:1px solid rgba(255,255,255,0.07);">
-                    <div class="color-btn active" style="background:#CC0000;" onclick="setColor('#CC0000', this)" title="Red"></div>
-                    <div class="color-btn" style="background:#DD5500;" onclick="setColor('#DD5500', this)" title="Orange"></div>
-                    <div class="color-btn" style="background:#CC8800;" onclick="setColor('#CC8800', this)" title="Amber"></div>
-                    <div class="color-btn" style="background:#BBAA00;" onclick="setColor('#BBAA00', this)" title="Yellow"></div>
-                    <div class="color-btn" style="background:#55AA00;" onclick="setColor('#55AA00', this)" title="Lime"></div>
-                    <div class="color-btn" style="background:#007700;" onclick="setColor('#007700', this)" title="Green"></div>
-                    <div class="color-btn" style="background:#007755;" onclick="setColor('#007755', this)" title="Teal"></div>
-                    <div class="color-btn" style="background:#008899;" onclick="setColor('#008899', this)" title="Mint"></div>
-                    <div class="color-btn" style="background:#0088AA;" onclick="setColor('#0088AA', this)" title="Cyan"></div>
-                    <div class="color-btn" style="background:#0066CC;" onclick="setColor('#0066CC', this)" title="Sky"></div>
-                    <div class="color-btn" style="background:#0033AA;" onclick="setColor('#0033AA', this)" title="Blue"></div>
-                    <div class="color-btn" style="background:#220099;" onclick="setColor('#220099', this)" title="Indigo"></div>
-                    <div class="color-btn" style="background:#5500AA;" onclick="setColor('#5500AA', this)" title="Violet"></div>
-                    <div class="color-btn" style="background:#7700AA;" onclick="setColor('#7700AA', this)" title="Purple"></div>
-                    <div class="color-btn" style="background:#AA0088;" onclick="setColor('#AA0088', this)" title="Magenta"></div>
-                    <div class="color-btn" style="background:#BB0044;" onclick="setColor('#BB0044', this)" title="Hot Pink"></div>
-                    <div class="color-btn" style="background:#CC2233;" onclick="setColor('#CC2233', this)" title="Rose"></div>
-                    <div class="color-btn" style="background:#FFFFFF; border:2px solid #444;" onclick="setColor('#FFFFFF', this)" title="White"></div>
-                    <div class="color-btn" style="background:#AAAAAA;" onclick="setColor('#AAAAAA', this)" title="Silver"></div>
-                    <div class="color-btn" style="background:#666666;" onclick="setColor('#666666', this)" title="Gray"></div>
-                    <div class="color-btn" style="background:#333333;" onclick="setColor('#333333', this)" title="Dark Gray"></div>
-                    <div class="color-btn" style="background:#7A3300;" onclick="setColor('#7A3300', this)" title="Brown"></div>
-                    <div class="color-btn" style="background:#997733;" onclick="setColor('#997733', this)" title="Tan"></div>
-                    <div class="color-btn" style="background:#111111; border:2px solid #444;" onclick="setColor('#111111', this)" title="Black"></div>
-                </div>
-            </div>
+    <!-- Favorites -->
+    <div id="favorites-bar" style="padding:6px 10px; border-bottom:1px solid rgba(255,255,255,0.06); min-height:44px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <span class="fav-hint" id="fav-hint" style="font-size:8px;">Right-click any block to pin</span>
+        <div id="fav-slots" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
+    </div>
+    <!-- Tab Bar (vertical) -->
+    <div style="display:flex; flex-direction:column; gap:2px; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <button class="tab-btn active" onclick="switchTab('blocks',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">⬛ Blocks</button>
+        <button class="tab-btn" onclick="switchTab('architecture',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">🏛 Architecture</button>
+        <button class="tab-btn" onclick="switchTab('nature',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">🌿 Nature</button>
+        <button class="tab-btn" onclick="switchTab('materials',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">🧱 Materials</button>
+        <button class="tab-btn" onclick="switchTab('platform',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">⛰️ Terrain</button>
+        <button class="tab-btn" onclick="switchTab('scene',event)" style="text-align:left; padding:6px 10px; border-radius:8px;">🌍 Scene</button>
+    </div>
+    <div style="padding:4px 6px;">
 
             <!-- BLOCKS TAB -->
             <div class="panel-section active" id="panel-blocks">
@@ -1165,8 +1117,122 @@
                     </div>
                 </div>
             </div>
-        </div><!-- /inner padding -->
-    </div><!-- /bottom-toolbar -->
+    </div><!-- /left panel inner -->
+</div><!-- /left-panel -->
+
+<!-- RIGHT SLIDE PANEL: Properties -->
+<div id="right-panel" class="slide-panel ui-interactive">
+    <div class="panel-header">
+        <span><i class="fas fa-sliders-h" style="margin-right:6px;"></i>Properties</span>
+        <button onclick="toggleRightPanel()" style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">✕</button>
+    </div>
+    <div class="panel-inner">
+        <!-- Size -->
+        <div class="field-label" style="margin-bottom:6px;">Block Size</div>
+        <div class="size-control" style="margin-bottom:14px;">
+            <button onclick="setSize(0.5)" class="size-btn" id="size-05">0.5</button>
+            <button onclick="setSize(1)"   class="size-btn active" id="size-1">1</button>
+            <button onclick="setSize(2)"   class="size-btn" id="size-2">2</button>
+            <button onclick="setSize(4)"   class="size-btn" id="size-4">4</button>
+        </div>
+        <!-- Colors -->
+        <div class="field-label" style="margin-bottom:6px;">Color</div>
+        <div id="colors" style="display:flex; gap:5px; flex-wrap:wrap; padding:8px; background:rgba(0,0,0,0.3); border-radius:10px; border:1px solid rgba(255,255,255,0.07); margin-bottom:14px;">
+            <div class="color-btn active" style="background:#CC0000;" onclick="setColor('#CC0000', this)" title="Red"></div>
+            <div class="color-btn" style="background:#DD5500;" onclick="setColor('#DD5500', this)" title="Orange"></div>
+            <div class="color-btn" style="background:#CC8800;" onclick="setColor('#CC8800', this)" title="Amber"></div>
+            <div class="color-btn" style="background:#BBAA00;" onclick="setColor('#BBAA00', this)" title="Yellow"></div>
+            <div class="color-btn" style="background:#55AA00;" onclick="setColor('#55AA00', this)" title="Lime"></div>
+            <div class="color-btn" style="background:#007700;" onclick="setColor('#007700', this)" title="Green"></div>
+            <div class="color-btn" style="background:#007755;" onclick="setColor('#007755', this)" title="Teal"></div>
+            <div class="color-btn" style="background:#008899;" onclick="setColor('#008899', this)" title="Mint"></div>
+            <div class="color-btn" style="background:#0088AA;" onclick="setColor('#0088AA', this)" title="Cyan"></div>
+            <div class="color-btn" style="background:#0066CC;" onclick="setColor('#0066CC', this)" title="Sky"></div>
+            <div class="color-btn" style="background:#0033AA;" onclick="setColor('#0033AA', this)" title="Blue"></div>
+            <div class="color-btn" style="background:#220099;" onclick="setColor('#220099', this)" title="Indigo"></div>
+            <div class="color-btn" style="background:#5500AA;" onclick="setColor('#5500AA', this)" title="Violet"></div>
+            <div class="color-btn" style="background:#7700AA;" onclick="setColor('#7700AA', this)" title="Purple"></div>
+            <div class="color-btn" style="background:#AA0088;" onclick="setColor('#AA0088', this)" title="Magenta"></div>
+            <div class="color-btn" style="background:#BB0044;" onclick="setColor('#BB0044', this)" title="Hot Pink"></div>
+            <div class="color-btn" style="background:#CC2233;" onclick="setColor('#CC2233', this)" title="Rose"></div>
+            <div class="color-btn" style="background:#FFFFFF; border:2px solid #444;" onclick="setColor('#FFFFFF', this)" title="White"></div>
+            <div class="color-btn" style="background:#AAAAAA;" onclick="setColor('#AAAAAA', this)" title="Silver"></div>
+            <div class="color-btn" style="background:#666666;" onclick="setColor('#666666', this)" title="Gray"></div>
+            <div class="color-btn" style="background:#333333;" onclick="setColor('#333333', this)" title="Dark Gray"></div>
+            <div class="color-btn" style="background:#7A3300;" onclick="setColor('#7A3300', this)" title="Brown"></div>
+            <div class="color-btn" style="background:#997733;" onclick="setColor('#997733', this)" title="Tan"></div>
+            <div class="color-btn" style="background:#111111; border:2px solid #444;" onclick="setColor('#111111', this)" title="Black"></div>
+        </div>
+        <!-- Snap + Symmetry -->
+        <div style="display:flex; gap:12px; align-items:center; margin-bottom:14px;">
+            <div class="flex items-center gap-2">
+                <span style="font-size:9px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.15em;">SNAP</span>
+                <div class="snap-toggle active" id="snap-toggle" onclick="toggleSnap()"></div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span style="font-size:9px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.15em;">SYM</span>
+                <button class="sym-btn" id="sym-btn" onclick="cycleSymmetry()">NONE</button>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="field-label" style="margin-bottom:6px;">Actions</div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+            <button onclick="openTemplatesModal()" class="glass-btn" style="font-size:10px; padding:7px 12px; border-color:rgba(168,85,247,0.4); color:#a855f7; justify-content:center;">
+                <i class="fas fa-layer-group"></i> Templates
+            </button>
+            <button onclick="openSaveModal()" class="glass-btn" style="font-size:10px; padding:7px 12px; justify-content:center;">
+                <i class="fas fa-save"></i> Save / Load
+            </button>
+            <button onclick="undo()" class="glass-btn" style="font-size:10px; padding:7px 12px; justify-content:center;">
+                <i class="fas fa-undo"></i> Undo
+            </button>
+            <button onclick="if(confirm('Clear all?')) clearAll()" class="glass-btn" style="font-size:10px; padding:7px 12px; border-color:rgba(239,68,68,0.35); color:#ef4444; justify-content:center;">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+        </div>
+    </div>
+</div><!-- /right-panel -->
+
+<!-- TOP BAR (compact) -->
+<div class="ui-layer">
+    <div class="flex justify-between items-start ui-interactive" style="gap:8px;">
+        <!-- Left: Logo + tools + counter -->
+        <div class="glass-panel" style="padding:7px 12px; display:flex; align-items:center; gap:10px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                <i class="fas fa-cubes" style="color:var(--accent); font-size:16px; filter:drop-shadow(0 0 8px var(--accent));"></i>
+                <span class="bf-logo" style="font-size:15px;">BrickForge</span>
+                <span class="pro-badge">PRO</span>
+            </div>
+            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+            <div class="tool-pill ui-interactive">
+                <button onclick="setTool('build')" class="tool-pill-btn active" id="tool-build"><i class="fas fa-hammer" style="font-size:12px;"></i> Build</button>
+                <button onclick="setTool('erase')" class="tool-pill-btn" id="tool-erase"><i class="fas fa-eraser" style="font-size:12px;"></i> Erase</button>
+            </div>
+            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+            <div class="block-counter" style="flex-shrink:0;">
+                <span class="block-counter-label">Blocks</span>
+                <span class="block-counter-num" id="block-count">0</span>
+            </div>
+            <div style="width:1px; height:26px; background:rgba(255,255,255,0.1);"></div>
+            <div style="flex-direction:column; align-items:center; display:flex; flex-shrink:0;">
+                <span style="font-size:8px; font-family:'Orbitron',monospace; color:rgba(255,255,255,0.35); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:3px;">Rotate</span>
+                <div style="display:flex; gap:2px;"><span class="key-badge">←</span><span class="key-badge">→</span><span class="key-badge">↑</span><span class="key-badge">↓</span></div>
+            </div>
+        </div>
+        <!-- Right: Action pill -->
+        <div class="right-panel ui-interactive">
+            <button onclick="smoothResetCamera()" class="tip-btn" data-tip="Reset Camera"><i class="fas fa-home"></i></button>
+            <button onclick="toggleGrid()" class="tip-btn active" id="grid-btn" data-tip="Toggle Grid (G)"><i class="fas fa-border-all"></i></button>
+            <button onclick="rotateGhost()" class="tip-btn" data-tip="Rotate (R)"><i class="fas fa-sync-alt"></i></button>
+            <div class="right-panel-divider"></div>
+            <button id="daynight-btn" class="tip-btn" data-tip="Next time of day (N)"><i class="fas fa-sun"></i></button>
+            <button onclick="toggleFog()" class="tip-btn" id="fog-btn" data-tip="Toggle Fog"><i class="fas fa-smog"></i></button>
+            <div class="right-panel-divider"></div>
+            <button onclick="takeScreenshot(); playSound('screenshot');" class="tip-btn" data-tip="Screenshot (P)"><i class="fas fa-camera"></i></button>
+            <button onclick="openThemePicker()" class="tip-btn" data-tip="Theme"><i class="fas fa-palette"></i></button>
+            <button id="mute-btn" onclick="toggleMute()" class="tip-btn" data-tip="Sound (M)"><i class="fas fa-volume-up"></i></button>
+        </div>
+    </div>
 </div><!-- /ui-layer -->
 
 <div class="toast-container" id="toast-container"></div>
@@ -3570,14 +3636,26 @@ function animate() {
 }
 
 // ==================== UI FUNCTIONS ====================
+function toggleLeftPanel() {
+    const panel = document.getElementById('left-panel');
+    const tab = document.getElementById('left-tab');
+    panel.classList.toggle('panel-open');
+    tab.classList.toggle('panel-open');
+}
+function toggleRightPanel() {
+    const panel = document.getElementById('right-panel');
+    const tab = document.getElementById('right-tab');
+    panel.classList.toggle('panel-open');
+    tab.classList.toggle('panel-open');
+}
+
 function switchTab(tab, e) {
     const eventTarget = e ? e.currentTarget : (typeof event !== 'undefined' ? event.target : null);
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.panel-section').forEach(p => { p.classList.remove('active'); p.style.opacity='0'; p.style.transform='translateY(8px)'; });
-    eventTarget.classList.add('active');
+    document.querySelectorAll('#left-panel .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel-section').forEach(p => { p.classList.remove('active'); });
+    if (eventTarget) eventTarget.classList.add('active');
     const panel = document.getElementById('panel-' + tab);
-    panel.classList.add('active');
-    requestAnimationFrame(() => { panel.style.transition='all 0.25s cubic-bezier(0.4,0,0.2,1)'; panel.style.opacity='1'; panel.style.transform='translateY(0)'; });
+    if (panel) panel.classList.add('active');
 }
 
 function setTool(t) {
@@ -3764,7 +3842,7 @@ function doLoad() { const name = document.getElementById('save-name-input').valu
 
 // ==================== SCREENSHOT ====================
 function takeScreenshot() {
-    const hideSelectors = '.ui-layer, .toast-container, .mobile-controls, #vignette, #templates-modal, #save-modal, #theme-modal, #block-context-menu, .mp-overlay';
+    const hideSelectors = '.ui-layer, #left-panel, #right-panel, #left-tab, #right-tab, .toast-container, .mobile-controls, #vignette, #templates-modal, #save-modal, #theme-modal, #block-context-menu, .mp-overlay';
     document.querySelectorAll(hideSelectors).forEach(el => { el.dataset.prevDisplay = getComputedStyle(el).display; el.style.display='none'; });
     renderer.render(scene, camera);
     const dataURL = renderer.domElement.toDataURL('image/png');
@@ -3841,16 +3919,8 @@ function toast(msg, type) {
 
 // ==================== TOOLBAR TOGGLE ====================
 function toggleToolbar() {
-    const toolbar = document.getElementById('bottom-toolbar');
-    const arrow = document.getElementById('toolbar-arrow');
-    if (isToolbarRetracted) {
-        toolbar.classList.remove('toolbar-retracted'); arrow.style.transform='rotate(0deg)';
-        toast('Toolbar expanded');
-    } else {
-        toolbar.classList.add('toolbar-retracted'); arrow.style.transform='rotate(180deg)';
-        toast('Toolbar minimized');
-    }
-    isToolbarRetracted = !isToolbarRetracted;
+    // T key now toggles the left (blocks) panel
+    toggleLeftPanel();
 }
 
 // ==================== CLEAR ALL ====================
